@@ -1,8 +1,39 @@
 <div class="terrain" id="terrain">
-    <div class="left-path">
+    <div class="options">
+        <div class="logo">
+            <img class="logo__pic" src={{ logo }}>
+            <span class="logo__text font-Limelight font-size-28 font-color-logo-color"> {{ logoText }} </span>
+        </div>
+        <div class="input-table">
+            <span class="input-table__title font-Comfortaa font-size-23 font-color-title"> {{ title }} </span>
+            {{> inputField inputFields.func}}
+            {{> inputField inputFields.alg}}
 
-    </div>
-    <div class="right-path">
+            <div class="menu display-none">
+                <div class="menu__item"> {{ algFields.first }} </div>
+                <div class="menu__item"> {{ algFields.second }} </div>
+                <div class="menu__item"> {{ algFields.third }} </div>
+            </div>
 
+            {{#each inputOptionsField}}
+                {{> inputField this}}
+            {{/each}}
+
+            <!--<span class="input-table__error-info font-MailSansRoman font-size-19 font-color-error" id="{{ jsIdError }}"></span>-->
+
+            <!--<a class="input-table__link font-MailSansRoman font-size-16 font-color-info" id="{{ jsIdLink }}"> {{ linkText }} </a>-->
+
+            <span class="input-table__link-info font-InterMedium font-size-15 font-color-reg-info"> {{ info }} </span>
+        </div>
     </div>
+    {{#if result}}
+        <img class="result border-radius-result margin-auto" src={{ result }}>
+    {{else}}
+        <div class="result table box-shadow-no-img border-radius-result">
+            <div class="table__block">
+                <img class="table__pic" src={{ smile }}>
+                <span class="table__text font-MailSansRoman font-size-19 font-color-gray-text"> {{ noImgText }} </span>
+            </div>
+        </div>
+    {{/if}}
 </div>

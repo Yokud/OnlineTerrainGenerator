@@ -28,10 +28,6 @@
     font-weight: 400;
 }
 
-
-
-
-
 .input-field:focus {
     outline: 1px solid var(--font-color-gray-text, #6C6F72);
 }
