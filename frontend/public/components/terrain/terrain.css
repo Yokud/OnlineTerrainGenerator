@@ -1,0 +1,11 @@
+.terrain {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.input-path {
+    grid-column: 1;
+}
+.result-path {
+    grid-column: 2;
+}

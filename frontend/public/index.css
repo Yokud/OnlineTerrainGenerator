@@ -1,0 +1,119 @@
+@import "components/terrain/terrain.css";
+@import "components/button/button.css";
+@import "components/inputField/inputField.css";
+
+@font-face {
+    font-family: Limelight; /* Имя шрифта */
+    src: url(static/fonts/Limelight-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: InterMedium; /* Имя шрифта */
+    src: url(static/fonts/Inter-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: InterRegular; /* Имя шрифта */
+    src: url(static/fonts/Inter-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: MailSansRoman; /* Имя шрифта */
+    src: url(static/fonts/MailSansRoman-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Comfortaa; /* Имя шрифта */
+    src: url(static/fonts/Comfortaa-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Montserrat; /* Имя шрифта */
+    src: url(static/fonts/Montserrat-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+
+:root {
+    --font-size-10: 10px;
+    --font-size-12: 12px;
+    --font-size-13: 13px;
+    --font-size-15: 15px;
+    --font-size-16: 16px;
+    --font-size-19: 19px;
+    --font-size-23: 23px;
+    --font-size-28: 28px;
+
+    --font-color-select-dark: #D9D9D9;
+
+    --background-color-main: #FAFAFA;
+
+    --box-shadow-no-img: 0px 0px 12px rgba(0, 0, 0, 0.1);
+}
+
+.font-Limelight {
+    font-family: Limelight, sans-serif;
+}
+.font-InterMedium {
+    font-family: InterMedium, sans-serif;
+}
+.font-InterRegular {
+    font-family: InterRegular, sans-serif;
+}
+.font-MailSansRoman {
+    font-family: MailSansRoman, sans-serif;
+}
+.font-Comfortaa {
+    font-family: Comfortaa, sans-serif;
+}
+.font-Montserrat {
+    font-family: Montserrat, sans-serif;
+}
+
+.font-size-10 {
+    font-size: var(--font-size-10, 10px);
+}
+.font-size-12 {
+    font-size: var(--font-size-12, 12px);
+}
+.font-size-13 {
+    font-size: var(--font-size-13, 13px);
+}
+.font-size-15 {
+    font-size: var(--font-size-15, 15px);
+}
+.font-size-16 {
+    font-size: var(--font-size-16, 16px);
+}
+.font-size-19 {
+    font-size: var(--font-size-19, 19px);
+}
+.font-size-23 {
+    font-size: var(--font-size-23, 23px);
+}
+.font-size-28 {
+    font-size: var(--font-size-28, 28px);
+}
+
+.font-color-select-dark {
+    color: var(--font-color-select-dark, #D9D9D9);
+}
+
+.background-color-main {
+    background: var(--background-color-main, #FAFAFA);
+}
+
+.box-shadow-no-img {
+    box-shadow: var(--box-shadow-no-img, inset 0px 4px 8px rgba(0, 0, 0, 0.04));
+}
+
+.border-none {
+    border: none;
+}
+.margin-auto {
+    margin: auto;
+}
+
+body, html, #root {
+    margin: 0;
+    min-height: 100vh;
+}
