@@ -44,10 +44,25 @@
     --font-size-28: 28px;
 
     --font-color-select-dark: #D9D9D9;
+    --font-color-gray-text: #6C6F72;
+    --font-color-error: #D5534D;
+    --font-color-btn: #FFFFFF;
+    --font-color-info: #8D949D;
+    --font-color-logo-color: #648A52;
 
     --background-color-main: #FAFAFA;
+    --background-color-input: #E9E9E9;
+    --background-color-error: #FFEBEB;
+    --background-color-btn: linear-gradient(270deg, #C72FCB -0.18%, #803BB6 37.83%, #510AC2 70.47%, #510AC2 98.59%);
 
-    --box-shadow-no-img: 0px 0px 12px rgba(0, 0, 0, 0.1);
+    --border-radius-btn: 8px;
+    --border-radius-result: 30px;
+
+    --btn-input-height: 52px;
+
+    --text-indent-input: 5px;
+
+    --box-shadow-no-img: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
 }
 
 .font-Limelight {
@@ -97,20 +112,56 @@
 .font-color-select-dark {
     color: var(--font-color-select-dark, #D9D9D9);
 }
+.font-color-gray-text {
+    color: var(--font-color-gray-text, #6C6F72);
+}
+.font-color-error {
+    color: var(--font-color-error, #D5534D);
+}
+.font-color-btn {
+    color: var(--font-color-btn, #FFFFFF);
+}
+.font-color-reg-info {
+    color: var(--font-color-info, #8D949D);
+}
+.font-color-logo-color {
+    color: var(--font-color-logo-color, #648A52);
+}
 
 .background-color-main {
     background: var(--background-color-main, #FAFAFA);
 }
-
-.box-shadow-no-img {
-    box-shadow: var(--box-shadow-no-img, inset 0px 4px 8px rgba(0, 0, 0, 0.04));
+.background-color-input {
+    background: var(--background-color-input, #E9E9E9);
+}
+.background-color-error {
+    background: var(--background-color-error, #FFEBEB);
+}
+.background-color-btn {
+    background: var(--background-color-btn, linear-gradient(270deg, #C72FCB -0.18%, #803BB6 37.83%, #510AC2 70.47%, #510AC2 98.59%));
 }
 
+.box-shadow-no-img {
+    box-shadow: var(--box-shadow-no-img, 0px 0px 12px 2px rgba(0, 0, 0, 0.3));
+}
+
+.border-radius-btn-input {
+    border-radius: var(--border-radius-btn, 8px);
+}
+.border-radius-result {
+    border-radius: var(--border-radius-result, 30px);
+}
 .border-none {
     border: none;
 }
 .margin-auto {
     margin: auto;
+}
+.text-indent-input {
+    text-indent: var(--text-indent-input, 5px);
+}
+.display-none {
+    display: none;
 }
 
 body, html, #root {
