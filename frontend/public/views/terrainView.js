@@ -1,13 +1,11 @@
 import terrainStore from "../stores/terrainStore.js";
+import {optionsConst} from "../static/htmlConst.js";
 
 export default class TerrainView {
     constructor() {
         this._addHandlebarsPartial();
 
-        this._jsId = 'terrain';
         this._rootElement = document.getElementById('root');
-
-        this._validateEmail = false;
 
         terrainStore.registerCallback(this.updatePage.bind(this))
     }
@@ -19,11 +17,18 @@ export default class TerrainView {
     }
 
     _addPagesElements() {
-
+        this._func = window.document.getElementById('js-func');
+        this._algoritm = window.document.getElementById('js-alg');
     }
 
     _addPagesListener() {
+        this._func.addEventListener('change', () => {
+            // ToDo: validation
+        });
 
+        this._algoritm.addEventListener('click', () => {
+            alert(1);
+        })
     }
 
     updatePage() {
@@ -33,10 +38,7 @@ export default class TerrainView {
     _preRender() {
         this._template = Handlebars.templates.terrain;
 
-        this._context = {
-            logoData: 'test',
-            result: 'static/img/testImg.svg'
-        }
+        this._context = optionsConst;
     }
 
     _render() {

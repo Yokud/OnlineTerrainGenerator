@@ -34,7 +34,7 @@ class terrainStore {
         const request = await Ajax.getTerrain(data);
 
         if (request.status === 200) {
-
+            alert('200');
         } else {
             alert('error');
         }
