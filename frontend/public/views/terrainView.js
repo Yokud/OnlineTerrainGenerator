@@ -19,6 +19,7 @@ export default class TerrainView {
     _addPagesElements() {
         this._func = window.document.getElementById('js-func');
         this._algoritm = window.document.getElementById('js-alg');
+        this._algoritmMenu = window.document.getElementById('js-alg-menu');
     }
 
     _addPagesListener() {
@@ -26,9 +27,13 @@ export default class TerrainView {
             // ToDo: validation
         });
 
-        this._algoritm.addEventListener('click', () => {
-            alert(1);
-        })
+        this._algoritm.addEventListener('mouseover', () => {
+            this._algoritmMenu.classList.remove('display-none');
+        });
+
+        this._algoritm.addEventListener('mouseout', () => {
+            this._algoritmMenu.classList.add('display-none');
+        });
     }
 
     updatePage() {
