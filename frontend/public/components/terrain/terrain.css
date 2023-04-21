@@ -8,7 +8,7 @@
     height: 100%;
 
     display: grid;
-    grid-template-columns: 13.3% 1fr 13.3%;
+    grid-template-columns: 21% 1fr 21%;
     grid-template-rows: 21.2% 1fr 26.9%;
 }
 .logo {
