@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace HeightMapLib
+namespace TerrainGenerator
 {
     public delegate float NoiseExpresion(float f);
 
@@ -81,10 +81,10 @@ namespace HeightMapLib
         {
             NoiseMap = LandGenerator.GenMap(Width, Height);
 
-            if (_expresion != null)
+            if (NoiseExpression != null)
                 for (var i = 0; i < _width; i++)
                     for (var j = 0; j < _height; j++)
-                        NoiseMap[i, j] = _expresion(NoiseMap[i, j]);
+                        NoiseMap[i, j] = NoiseExpression(NoiseMap[i, j]);
         }
 
         public float this[int i, int j]
