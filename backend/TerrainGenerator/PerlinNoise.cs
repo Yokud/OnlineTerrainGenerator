@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace HeightMapLib
 {
@@ -136,7 +137,9 @@ namespace HeightMapLib
 
         private Vector2 GetGradient(float x, float y)
         {
-            var hash = (int)((((int)x * 1836311903) ^ ((int)y * 2971215073) + 4807526976) & 1023);
+            //var hash = (int)((((int)x * 1836311903) ^ ((int)y * 2971215073) + 4807526976) & 1023);
+            //return Gradients[SeedNums[Math.Abs(hash) % SeedNums.Length]];
+            var hash = BitConverter.ToInt64(SHA512.HashData(BitConverter.GetBytes(x).Concat(BitConverter.GetBytes(y)).ToArray()));
             return Gradients[SeedNums[Math.Abs(hash) % SeedNums.Length]];
         }
 
