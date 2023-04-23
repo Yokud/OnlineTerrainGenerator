@@ -4,6 +4,7 @@ using System.Drawing;
 namespace HeightMapLib
 {
     public delegate float NoiseExpresion(float f);
+
     public interface ILandGenerator
     {
         int Seed { get; set; }
@@ -13,15 +14,15 @@ namespace HeightMapLib
     public class HeightMap
     {
         int _width, _height;
-        readonly NoiseExpresion _expresion;
+        NoiseExpresion _expresion;
 
-        ILandGenerator LandGenerator { get; set; }
+        ILandGenerator _generator;
 
         public HeightMap(int width, int height, ILandGenerator lg, NoiseExpresion exp = null)
         {
             Width = width;
             Height = height;
-            LandGenerator = lg;
+            _generator = lg;
             _expresion = exp;
 
             GenMap();
@@ -54,6 +55,26 @@ namespace HeightMapLib
         {
             get => LandGenerator.Seed;
             set => LandGenerator.Seed = value;
+        }
+
+        ILandGenerator LandGenerator
+        {
+            get => _generator;
+            set
+            {
+                _generator = value;
+                GenMap();
+            }
+        }
+
+        NoiseExpresion NoiseExpression
+        {
+            get => _expresion;
+            set
+            {
+                _expresion = value;
+                GenMap();
+            }
         }
 
         private void GenMap()
