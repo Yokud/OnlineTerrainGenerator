@@ -1,7 +1,4 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-
-namespace TerrainGenerator
+﻿namespace TerrainGenerator
 {
     public delegate float NoiseExpresion(float f);
 
@@ -180,6 +177,31 @@ namespace TerrainGenerator
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
                         pixelRow[j] = Color.FromRgba(hm[i, j], hm[i, j], hm[i, j], 255);
+                }
+            });
+
+            return img;
+        }
+
+        public Image<Rgba32> GetColoredImage(ColorScheme colorScheme)
+        {
+            var hm = new byte[_width, _height];
+            var (h_min, h_max) = MinMax();
+            var delta = h_max - h_min;
+
+            for (var i = 0; i < Width; i++)
+                for (var j = 0; j < Height; j++)
+                    hm[i, j] = (byte)((NoiseMap[i, j] - h_min) / delta * 255);
+
+            var img = new Image<Rgba32>(Width, Height);
+
+            img.ProcessPixelRows(pixelAccessor =>
+            {
+                for (var i = 0; i < _width; i++)
+                {
+                    var pixelRow = pixelAccessor.GetRowSpan(i);
+                    for (var j = 0; j < _height; j++)
+                        pixelRow[j] = colorScheme.GetColorFromGrayscale(hm[i, j]);
                 }
             });
 
