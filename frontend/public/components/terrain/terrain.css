@@ -22,7 +22,7 @@
     grid-column: 2;
 
     display: grid;
-    grid-template-rows: 53px 53px 40px 40px 40px 40px 40px;
+    grid-template-rows: 50px 50px 50px 50px 50px 50px 50px 50px;
     grid-row-gap: 16px;
 }
 .input-table__title {
@@ -49,11 +49,45 @@
 }
 
 .menu {
+    display: grid;
+    grid-template: 70% 2% 28%/ 100%;
+}
+.menu__field {
     padding-left: 10px;
     padding-right: 10px;
 
     outline: none;
+
+    grid-row: 1;
+    grid-column: 1;
 }
+.menu__field-correct {
+    border: none;
+    background: var(--background-color-input, #E9E9E9);
+}
+.menu__field-incorrect {
+    border: 1px solid var(--font-color-error, #D5534D);
+    background: var(--background-color-error, #FFEBEB);
+}
+.menu__error {
+    grid-row: 3;
+    grid-column: 1;
+
+    font-weight: 400;
+}
+
+.menu__field:focus {
+    outline: 1px solid var(--font-color-gray-text, #6C6F72);
+}
+.menu__field::placeholder {
+    font-family: InterMedium, sans-serif;
+    color: var(--font-color-gray-text, #6C6F72);
+    font-size: var(--font-size-15, 15px);
+}
+
+
+
+
 
 .menu-item {
     padding-left: 10px;

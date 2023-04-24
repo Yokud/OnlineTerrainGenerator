@@ -53,7 +53,8 @@
     --background-color-main: #FAFAFA;
     --background-color-input: #E9E9E9;
     --background-color-error: #FFEBEB;
-    --background-color-btn: linear-gradient(270deg, #C72FCB -0.18%, #803BB6 37.83%, #510AC2 70.47%, #510AC2 98.59%);
+    /*--background-color-btn: linear-gradient(270deg, #C72FCB -0.18%, #803BB6 37.83%, #510AC2 70.47%, #510AC2 98.59%);*/
+    --background-color-btn: linear-gradient(270deg, #5A8F59 -0.18%, #3435A2 98.59%);
 
     --border-radius-btn: 8px;
     --border-radius-result: 30px;
@@ -138,7 +139,7 @@
     background: var(--background-color-error, #FFEBEB);
 }
 .background-color-btn {
-    background: var(--background-color-btn, linear-gradient(270deg, #C72FCB -0.18%, #803BB6 37.83%, #510AC2 70.47%, #510AC2 98.59%));
+    background: var(--background-color-btn, linear-gradient(270deg, #5A8F59 -0.18%, #3435A2 98.59%));
 }
 
 .box-shadow-no-img {

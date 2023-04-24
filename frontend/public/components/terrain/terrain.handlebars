@@ -8,16 +8,21 @@
             <span class="input-table__title font-Comfortaa font-size-23 font-color-title"> {{ title }} </span>
             {{> inputField inputFields.func}}
 
-            <select class="menu border-none font-InterMedium font-color-gray-text font-size-15 border-radius-btn-input text-indent-input" id="myCombo">
-                <option value="null"> {{ inputFields.alg.help }}</option>
-                <option value="1"> {{ algFields.first }} </option>
-                <option value="2"> {{ algFields.second }} </option>
-                <option value="3"> {{ algFields.third }} </option>
-            </select>
+            <div class="menu">
+                <select class="menu__field menu__field-correct font-InterMedium font-color-gray-text font-size-15 border-radius-btn-input text-indent-input" id={{ inputFields.alg.jsIdInput }}>
+                    <option value="0"> {{ inputFields.alg.help }}</option>
+                    <option value="1"> {{ algFields.first }} </option>
+                    <option value="2"> {{ algFields.second }} </option>
+                    <option value="3"> {{ algFields.third }} </option>
+                </select>
+                <div class="menu__error font-InterRegular font-size-12 font-color-error" id={{ inputFields.alg.jsIdError }}></div>
+            </div>
 
             {{#each inputOptionsField}}
                 {{> inputField this}}
             {{/each}}
+
+            {{> button buttonInfo}}
 
             <!--<span class="input-table__error-info font-MailSansRoman font-size-19 font-color-error" id="{{ jsIdError }}"></span>-->
 
