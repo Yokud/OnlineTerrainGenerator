@@ -11,58 +11,8 @@ namespace TerrainGenerator
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
-        public SimplexNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int seed = -1)
-        {
-            Scale = scale;
-            Octaves = octaves;
-            Lacunarity = lacunarity;
-            Persistence = persistence;
-
-            Random rd;
-            if (seed == -1)
-            {
-                rd = new Random();
-                Seed = Environment.TickCount;
-            }
-            else
-            {
-                Seed = seed;
-                rd = new Random(seed);
-            }
-
-            SeedNums = new int[256];
-            for (var i = 0; i < SeedNums.Length; i++)
-                SeedNums[i] = rd.Next(0, SeedNums.Length);
-        }
-
-        public int Scale
-        {
-            get => _scale;
-            set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
-        }
-        public int Octaves
-        {
-            get => _octaves;
-            set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
-        }
-        public float Lacunarity
-        {
-            get => _lacunarity;
-            set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
-        }
-        public float Persistence
-        {
-            get => _persistence;
-            set => _persistence = value > 0 ? value : throw new Exception("Persistence is positive value");
-        }
-
-        public int Seed
-        {
-            get => _seed;
-            set => _seed = value >= 0 ? value : throw new Exception("Seed is positive value");
-        }
-
-        public static Vector2[] Gradients => new Vector2[]
+        readonly int[] _seedNums;
+        static readonly Vector2[] s_gradients = new Vector2[]
         {
             new Vector2(1, 1),
             new Vector2(-1, 1),
@@ -78,7 +28,50 @@ namespace TerrainGenerator
             new Vector2(0, -1),
         };
 
-        private int[] SeedNums { get; set; }
+        public SimplexNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int? seed = null)
+        {
+            Scale = scale;
+            Octaves = octaves;
+            Lacunarity = lacunarity;
+            Persistence = persistence;
+
+            Seed = seed ?? Environment.TickCount;
+            var rd = new Random(Seed);
+
+            _seedNums = new int[256];
+            for (var i = 0; i < _seedNums.Length; i++)
+                _seedNums[i] = rd.Next(0, _seedNums.Length);
+        }
+
+        public int Scale
+        {
+            get => _scale;
+            set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
+        }
+
+        public int Octaves
+        {
+            get => _octaves;
+            set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
+        }
+
+        public float Lacunarity
+        {
+            get => _lacunarity;
+            set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
+        }
+
+        public float Persistence
+        {
+            get => _persistence;
+            set => _persistence = value > 0 ? value : throw new Exception("Persistence is positive value");
+        }
+
+        public int Seed
+        {
+            get => _seed;
+            set => _seed = value;
+        }
 
         public float[,] GenMap(int width, int height)
         {
@@ -135,22 +128,21 @@ namespace TerrainGenerator
                 i1 = 0;
                 j1 = 1;
             }
+
             // upper triangle, YX order: (0,0)->(0,1)->(1,1)
             // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
             // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
             // c = (3-sqrt(3))/6
-            var x1 = x0 - i1 + K2; // Offsets for middle corner in (x,y) unskewed coords
+            var x1 = x0 - i1 + K2;
             var y1 = y0 - j1 + K2;
-            var x2 = x0 - 1.0f + 2.0f * K2; // Offsets for last corner in (x,y) unskewed coords
+            var x2 = x0 - 1.0f + 2.0f * K2;
             var y2 = y0 - 1.0f + 2.0f * K2;
 
-            // Calculate the contribution from the three corners
             var t0 = 0.5f - x0 * x0 - y0 * y0;
             if (t0 >= 0)
             {
                 var g0 = GetGradient(i, j);
                 t0 *= t0;
-                // n0 = t0 * t0 * (grad2[gi0] * x0 + grad2[gi0 + 1] * y0); // (x,y) of grad3 used for 2D gradient
                 n0 = t0 * t0 * (g0.X * x0 + g0.Y * y0);
             }
 
@@ -159,7 +151,6 @@ namespace TerrainGenerator
             {
                 var g1 = GetGradient(i + i1, j + j1);
                 t1 *= t1;
-                // n1 = t1 * t1 * (grad2[gi1] * x1 + grad2[gi1 + 1] * y1);
                 n1 = t1 * t1 * (g1.X * x1 + g1.Y * y1);
             }
 
@@ -168,21 +159,16 @@ namespace TerrainGenerator
             {
                 var g2 = GetGradient(i + 1, j + 1);
                 t2 *= t2;
-                // n2 = t2 * t2 * (grad2[gi2] * x2 + grad2[gi2 + 1] * y2);
                 n2 = t2 * t2 * (g2.X * x2 + g2.Y * y2);
             }
 
-            // Add contributions from each corner to get the final noise value.
-            // The result is scaled to return values in the interval [-1,1].
             return 70.0f * (n0 + n1 + n2);
         }
 
         private Vector2 GetGradient(float x, float y)
         {
-            //var hash = (int)((((int)x * 1836311903) ^ ((int)y * 2971215073) + 4807526976) & 1023);
-            //return Gradients[SeedNums[Math.Abs(hash) % SeedNums.Length]];
             var hash = BitConverter.ToInt64(SHA512.HashData(BitConverter.GetBytes(x).Concat(BitConverter.GetBytes(y)).ToArray()));
-            return Gradients[SeedNums[Math.Abs(hash) % SeedNums.Length]];
+            return s_gradients[_seedNums[Math.Abs(hash) % _seedNums.Length]];
         }
     }
 }

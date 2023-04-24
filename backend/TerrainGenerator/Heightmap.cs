@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-
-namespace TerrainGenerator
+﻿namespace TerrainGenerator
 {
     public delegate float NoiseExpresion(float f);
 
@@ -14,11 +11,11 @@ namespace TerrainGenerator
     public class HeightMap
     {
         int _width, _height;
-        NoiseExpresion _expresion;
+        NoiseExpresion? _expresion;
 
         ILandGenerator _generator;
 
-        public HeightMap(int width, int height, ILandGenerator lg, NoiseExpresion exp = null)
+        public HeightMap(int width, int height, ILandGenerator lg, NoiseExpresion? exp = null)
         {
             Width = width;
             Height = height;
@@ -67,7 +64,7 @@ namespace TerrainGenerator
             }
         }
 
-        NoiseExpresion NoiseExpression
+        NoiseExpresion? NoiseExpression
         {
             get => _expresion;
             set

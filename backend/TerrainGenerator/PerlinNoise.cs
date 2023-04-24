@@ -8,36 +8,30 @@ namespace TerrainGenerator
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
-        public PerlinNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int seed = -1)
+        readonly int[] _seedNums;
+        readonly Vector2[] _gradients;
+
+        public PerlinNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int? seed = null)
         {
             Scale = scale;
             Octaves = octaves;
             Lacunarity = lacunarity;
             Persistence = persistence;
 
-            Gradients = new Vector2[256];
-            for (var i = 0; i < Gradients.Length; i++)
+            _gradients = new Vector2[256];
+            for (var i = 0; i < _gradients.Length; i++)
             {
                 var val = 2.0 * Math.PI / 256 * i;
-                Gradients[i].X = (float)Math.Cos(val);
-                Gradients[i].Y = (float)Math.Sin(val);
+                _gradients[i].X = (float)Math.Cos(val);
+                _gradients[i].Y = (float)Math.Sin(val);
             }
 
-            Random rd;
-            if (seed == -1)
-            {
-                rd = new Random();
-                Seed = Environment.TickCount;
-            }
-            else
-            {
-                Seed = seed;
-                rd = new Random(seed);
-            }
+            Seed = seed ?? Environment.TickCount;
+            var rd = new Random(Seed);
 
-            SeedNums = new int[256];
-            for (var i = 0; i < SeedNums.Length; i++)
-                SeedNums[i] = rd.Next(0, SeedNums.Length);
+            _seedNums = new int[256];
+            for (var i = 0; i < _seedNums.Length; i++)
+                _seedNums[i] = rd.Next(0, _seedNums.Length);
         }
 
         public int Scale
@@ -45,16 +39,19 @@ namespace TerrainGenerator
             get => _scale;
             set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
         }
+
         public int Octaves
         {
             get => _octaves;
             set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
         }
+
         public float Lacunarity
         {
             get => _lacunarity;
             set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
         }
+
         public float Persistence
         {
             get => _persistence;
@@ -64,12 +61,8 @@ namespace TerrainGenerator
         public int Seed
         {
             get => _seed;
-            set => _seed = value >= 0 ? value : throw new Exception("Seed is positive value");
+            set => _seed = value;
         }
-
-        public Vector2[] Gradients { get; private set; }
-
-        private int[] SeedNums { get; set; }
 
         float GenNoise(int x, int y)
         {
@@ -136,10 +129,8 @@ namespace TerrainGenerator
 
         private Vector2 GetGradient(float x, float y)
         {
-            //var hash = (int)((((int)x * 1836311903) ^ ((int)y * 2971215073) + 4807526976) & 1023);
-            //return Gradients[SeedNums[Math.Abs(hash) % SeedNums.Length]];
             var hash = BitConverter.ToInt64(SHA512.HashData(BitConverter.GetBytes(x).Concat(BitConverter.GetBytes(y)).ToArray()));
-            return Gradients[SeedNums[Math.Abs(hash) % SeedNums.Length]];
+            return _gradients[_seedNums[Math.Abs(hash) % _seedNums.Length]];
         }
 
         private static float SmootherStep(float t) => t * t * t * (6 * t * t - 15 * t + 10);

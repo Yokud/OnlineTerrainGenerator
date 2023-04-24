@@ -5,17 +5,17 @@
         int _seed;
         float _roughness;
 
-        public DiamondSquare(float roughness = 0.5f, int seed = -1)
+        public DiamondSquare(float roughness = 0.5f, int? seed = null)
         {
             _roughness = roughness;
 
-            _seed = seed != -1 ? Environment.TickCount : seed;
+            _seed = seed ?? Environment.TickCount;
         }
 
         public int Seed
         {
             get => _seed;
-            set => _seed = value >= 0 ? value : throw new Exception("Seed is positive value");
+            set => _seed = value;
         }
 
         public float Roughness
@@ -28,6 +28,9 @@
         {
             if (width != height)
                 throw new ArgumentException("Sizes of map must be the same for this method");
+
+            if (Math.Log2(width - 1) % 1 >= 1e-6)
+                throw new ArgumentException("Sizes of map must be equal 2^n + 1 for this method");
 
             var size = width;
             var max = size - 1;
