@@ -8,37 +8,6 @@ namespace TerrainGenerator
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
-        public int Scale
-        {
-            get => _scale;
-            set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
-        }
-        public int Octaves
-        {
-            get => _octaves;
-            set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
-        }
-        public float Lacunarity
-        {
-            get => _lacunarity;
-            set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
-        }
-        public float Persistence
-        {
-            get => _persistence;
-            set => _persistence = value > 0 ? value : throw new Exception("Persistence is positive value");
-        }
-
-        public Vector2[] Gradients { get; private set; }
-
-        private int[] SeedNums { get; set; }
-
-        public int Seed
-        {
-            get => _seed;
-            set => _seed = value >= 0 ? value : throw new Exception("Seed is positive value");
-        }
-
         public PerlinNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int seed = -1)
         {
             Scale = scale;
@@ -70,6 +39,37 @@ namespace TerrainGenerator
             for (var i = 0; i < SeedNums.Length; i++)
                 SeedNums[i] = rd.Next(0, SeedNums.Length);
         }
+
+        public int Scale
+        {
+            get => _scale;
+            set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
+        }
+        public int Octaves
+        {
+            get => _octaves;
+            set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
+        }
+        public float Lacunarity
+        {
+            get => _lacunarity;
+            set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
+        }
+        public float Persistence
+        {
+            get => _persistence;
+            set => _persistence = value > 0 ? value : throw new Exception("Persistence is positive value");
+        }
+
+        public int Seed
+        {
+            get => _seed;
+            set => _seed = value >= 0 ? value : throw new Exception("Seed is positive value");
+        }
+
+        public Vector2[] Gradients { get; private set; }
+
+        private int[] SeedNums { get; set; }
 
         float GenNoise(int x, int y)
         {

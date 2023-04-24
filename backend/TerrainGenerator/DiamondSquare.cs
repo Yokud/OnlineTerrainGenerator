@@ -1,11 +1,11 @@
 ﻿namespace TerrainGenerator
 {
-    class DiamondSquare : ILandGenerator
+    public class DiamondSquare : ILandGenerator
     {
         int _seed;
         float _roughness;
 
-        public DiamondSquare(float roughness, int seed = -1)
+        public DiamondSquare(float roughness = 0.5f, int seed = -1)
         {
             _roughness = roughness;
 
