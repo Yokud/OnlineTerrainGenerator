@@ -20,6 +20,7 @@ export default class TerrainView {
         this._func = window.document.getElementById('js-func');
         this._algoritm = window.document.getElementById('js-alg');
         this._algoritmMenu = window.document.getElementById('js-alg-menu');
+        this._myCombo = document.getElementById("myCombo");
     }
 
     _addPagesListener() {
@@ -27,12 +28,8 @@ export default class TerrainView {
             // ToDo: validation
         });
 
-        this._algoritm.addEventListener('mouseover', () => {
-            this._algoritmMenu.classList.remove('display-none');
-        });
+        this._myCombo.addEventListener("change", function() {
 
-        this._algoritm.addEventListener('mouseout', () => {
-            this._algoritmMenu.classList.add('display-none');
         });
     }
 
@@ -42,6 +39,18 @@ export default class TerrainView {
 
     _preRender() {
         this._template = Handlebars.templates.terrain;
+
+        if (this._myCombo) {
+            if (this._myCombo.value === 'Diamond-Square') {
+                optionsConst.inputOptionsField = optionsConst.inputOptionsFieldFirst;
+            } else if (this._myCombo.value === 'Шум Перлина') {
+                optionsConst.inputOptionsField = optionsConst.inputOptionsFieldSecond;
+            } else if (this._myCombo.value === 'Симплексный шум') {
+                optionsConst.inputOptionsField = optionsConst.inputOptionsFieldThird;
+            } else {
+                optionsConst.inputOptionsField = null;
+            }
+        }
 
         this._context = optionsConst;
     }

@@ -49,7 +49,17 @@
 }
 
 .menu {
+    padding-left: 10px;
+    padding-right: 10px;
 
+    outline: none;
+}
+
+.menu-item {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    outline: none;
 }
 
 .result {

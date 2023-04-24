@@ -11,9 +11,10 @@ export const optionsConst = {
         second: 'Шум Перлина',
         third: 'Симплексный шум',
     },
-    inputOptionsField: [
-
-    ],
+    inputOptionsField: null,
+    inputOptionsFieldFirst: [{name: 'шероховатость', necessarily: true}, {name: 'зерно генерации', necessarily: false}],
+    inputOptionsFieldSecond: [{name: 'масштаб', necessarily: true}, {name: 'кол-во октав', necessarily: true}, {name: 'лакунарность', necessarily: true}, {name: 'стойкость', necessarily: true}, {name: 'зерно генерации', necessarily: false}],
+    inputOptionsFieldThird: [{name: 'масштаб', necessarily: true}, {name: 'кол-во октав', necessarily: true}, {name: 'лакунарность', necessarily: true}, {name: 'стойкость', necessarily: true}, {name: 'зерно генерации', necessarily: false}],
     logo: 'static/img/logo.svg',
     smile: 'static/img/sad.svg',
     logoText: 'OnlineTerrainGenerator',
