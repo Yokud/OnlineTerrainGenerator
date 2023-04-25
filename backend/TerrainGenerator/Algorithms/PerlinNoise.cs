@@ -31,7 +31,7 @@ namespace TerrainGenerator
 
             _seedNums = new int[256];
             for (var i = 0; i < _seedNums.Length; i++)
-                _seedNums[i] = rd.Next(0, _seedNums.Length);
+                _seedNums[i] = rd.Next(0, _gradients.Length);
         }
 
         public int Scale
