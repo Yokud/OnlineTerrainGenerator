@@ -4,18 +4,24 @@
     {
         int _seed;
         float _roughness;
+        Random _random;
 
         public DiamondSquare(float roughness = 0.5f, int? seed = null)
         {
             _roughness = roughness;
 
             _seed = seed ?? Environment.TickCount;
+            _random = new Random(_seed);
         }
 
         public int Seed
         {
             get => _seed;
-            set => _seed = value;
+            set
+            {
+                _seed = value;
+                _random = new Random(_seed);
+            }
         }
 
         public float Roughness
@@ -36,35 +42,29 @@
             var max = size - 1;
             var map = new float[size, size];
 
-            map[0, 0] = max;
-            map[max, 0] = max / 2;
-            map[max, max] = 0;
-            map[0, max] = max / 2;
+            map[0, 0] = RandomFloat(max);
+            map[max, 0] = RandomFloat(max);
+            map[max, max] = RandomFloat(max);
+            map[0, max] = RandomFloat(max);
 
-            Divide(max);
+            for (var currSize = max; currSize > 1; currSize /= 2)
+            {
+                int x, y, half = currSize / 2;
+                var scale = Roughness * currSize;
+
+                for (y = half; y <= max; y += currSize)
+                    for (x = half; x <= max; x += currSize)
+                    {
+                        Square(x, y, half, RandomFloat(scale));
+
+                        Diamond(x, y - half, half, RandomFloat(scale));
+                        Diamond(x - half, y, half, RandomFloat(scale));
+                        Diamond(x, y + half, half, RandomFloat(scale));
+                        Diamond(x + half, y, half, RandomFloat(scale));
+                    }           
+            }
 
             return map;
-
-            void Divide(int size)
-            {
-                int x, y, half = size / 2;
-                var scale = Roughness * size;
-
-                if (half < 1)
-                    return;
-
-                var rd = new Random(_seed);
-
-                for (y = half; y < max; y += size)
-                    for (x = half; x < max; x += size)
-                        Square(x, y, half, rd.NextSingle() * 2 * scale - scale);
-
-                for (y = 0; y <= max; y += half)
-                    for (x = (y + half) % size; x <= max; x += size)
-                        Diamond(x, y, half, rd.NextSingle() * 2 * scale - scale);
-
-                Divide(size / 2);
-            }
 
             void Diamond(int x, int y, int size, float offset)
             {
@@ -74,9 +74,16 @@
 
             void Square(int x, int y, int size, float offset)
             {
-                var ave = new[] { (x - size, y - size), (x + size, y - size), (x + size, y + size), (x - size, y + size) }.Where(i => i.Item1 >= 0 && i.Item1 <= max && i.Item2 >= 0 && i.Item2 <= max).Select(i => map[i.Item1, i.Item2]).Average();
+                var ave = new[] { (x - size, y - size), (x + size, y + size), (x - size, y + size), (x + size, y - size) }.Where(i => i.Item1 >= 0 && i.Item1 <= max && i.Item2 >= 0 && i.Item2 <= max).Select(i => map[i.Item1, i.Item2]).Average();
                 map[x, y] = ave + offset;
             }
+        }
+
+        float RandomFloat(float x)
+        {
+            var offset = _random.NextSingle() * 2 * x - x;
+            var sign = Math.Sign(offset);
+            return (float)(sign * Math.Pow(Math.Abs(offset), 1 / Math.Sqrt(Roughness)));
         }
     }
 }

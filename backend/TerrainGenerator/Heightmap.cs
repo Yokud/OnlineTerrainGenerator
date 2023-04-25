@@ -34,8 +34,6 @@
             Seed = h.Seed;
         }
 
-        public float[,] NoiseMap { get; private set; }
-
         public int Width
         {
             get => _width;
@@ -54,7 +52,7 @@
             set => LandGenerator.Seed = value;
         }
 
-        ILandGenerator LandGenerator
+        public ILandGenerator LandGenerator
         {
             get => _generator;
             set
@@ -64,7 +62,7 @@
             }
         }
 
-        NoiseExpresion? NoiseExpression
+        public NoiseExpresion? NoiseExpression
         {
             get => _expresion;
             set
@@ -74,15 +72,7 @@
             }
         }
 
-        private void GenMap()
-        {
-            NoiseMap = LandGenerator.GenMap(Width, Height);
-
-            if (NoiseExpression != null)
-                for (var i = 0; i < _width; i++)
-                    for (var j = 0; j < _height; j++)
-                        NoiseMap[i, j] = NoiseExpression(NoiseMap[i, j]);
-        }
+        float[,] NoiseMap { get; set; }
 
         public float this[int i, int j]
         {
@@ -156,6 +146,16 @@
             for (var i = 0; i < Width; i++)
                 for (var j = 0; j < Height; j++)
                     NoiseMap[i, j] = (NoiseMap[i, j] - h_min) / delta;
+        }
+
+        void GenMap()
+        {
+            NoiseMap = LandGenerator.GenMap(Width, Height);
+
+            if (NoiseExpression != null)
+                for (var i = 0; i < _width; i++)
+                    for (var j = 0; j < _height; j++)
+                        NoiseMap[i, j] = NoiseExpression(NoiseMap[i, j]);
         }
 
         public Image<Rgba32> GetGrayscaledImage()
