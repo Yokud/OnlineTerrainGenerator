@@ -1,6 +1,6 @@
 ﻿namespace TerrainGenerator
 {
-    public delegate float NoiseExpresion(float f);
+    public delegate float NoiseExpresion(float x);
 
     public interface ILandGenerator
     {
