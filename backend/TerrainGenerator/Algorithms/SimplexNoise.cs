@@ -66,11 +66,11 @@
                     float amplitude = 1;
                     float max_amp = 0;
                     var temp_octs = Octaves;
-                    var temp_scale = _scale;
+                    var temp_scale = (float)_scale;
 
                     while (temp_octs > 0)
                     {
-                        map[i, j] += Generate((float)i / temp_scale, (float)j / temp_scale) * amplitude;
+                        map[i, j] += Generate(i / temp_scale, j / temp_scale) * amplitude;
 
                         max_amp += amplitude;
                         amplitude *= _persistence;
