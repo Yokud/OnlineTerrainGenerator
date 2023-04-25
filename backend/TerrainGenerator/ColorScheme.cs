@@ -1,6 +1,6 @@
 ﻿namespace TerrainGenerator
 {
-    public readonly struct ColorSchemeUnit
+    public readonly struct ColorSchemeUnit : IComparable<ColorSchemeUnit>
     {
         public readonly Color Color;
         public readonly byte GrayscaleValue;
@@ -10,6 +10,11 @@
             Color = color;
             GrayscaleValue = grayscaleValue;
         }
+
+        public int CompareTo(ColorSchemeUnit other)
+        {
+            return GrayscaleValue - other.GrayscaleValue;
+        }
     }
 
     public class ColorScheme : List<ColorSchemeUnit>
@@ -18,7 +23,7 @@
         {
             var list = this.Where(c => c.GrayscaleValue >= grayscaleValue);
 
-            var colorSchemeUnit = list != null ? list.ElementAt(0) : this[^1];
+            var colorSchemeUnit = list != null ? list.Min() : this[^1];
 
             return colorSchemeUnit.Color;
         }
