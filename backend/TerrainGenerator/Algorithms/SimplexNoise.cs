@@ -1,32 +1,11 @@
-﻿using System.Numerics;
-using System.Security.Cryptography;
-
-namespace TerrainGenerator
+﻿namespace TerrainGenerator
 {
     public class SimplexNoise : ILandGenerator
     {
-        const float K1 = 0.366025404f; // (sqrt(3) - 1) / 2;
-        const float K2 = 0.211324865f; // (3 - sqrt(3)) / 6;
-
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
-        readonly int[] _seedNums;
-        static readonly Vector2[] s_gradients = new Vector2[]
-        {
-            new Vector2(1, 1),
-            new Vector2(-1, 1),
-            new Vector2(1, -1),
-            new Vector2(-1, -1),
-            new Vector2(1, 0),
-            new Vector2(-1, 0),
-            new Vector2(1, 0),
-            new Vector2(-1, 0),
-            new Vector2(0, 1),
-            new Vector2(0, -1),
-            new Vector2(0, 1),
-            new Vector2(0, -1),
-        };
+        readonly byte[] _seedNums;
 
         public SimplexNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int? seed = null)
         {
@@ -35,12 +14,11 @@ namespace TerrainGenerator
             Lacunarity = lacunarity;
             Persistence = persistence;
 
-            Seed = seed ?? Environment.TickCount;
-            var rd = new Random(Seed);
+            _seed = seed ?? Environment.TickCount;
+            var rd = new Random(_seed);
 
-            _seedNums = new int[256];
-            for (var i = 0; i < _seedNums.Length; i++)
-                _seedNums[i] = rd.Next(0, s_gradients.Length);
+            _seedNums = new byte[512];
+            rd.NextBytes(_seedNums);
         }
 
         public int Scale
@@ -70,7 +48,12 @@ namespace TerrainGenerator
         public int Seed
         {
             get => _seed;
-            set => _seed = value;
+            set
+            {
+                _seed = value;
+                var rd = new Random(_seed);
+                rd.NextBytes(_seedNums);
+            }
         }
 
         public float[,] GenMap(int width, int height)
@@ -87,88 +70,111 @@ namespace TerrainGenerator
 
                     while (temp_octs > 0)
                     {
-                        map[i, j] += GenNoise(i, j) * amplitude;
+                        map[i, j] += Generate((float)i / temp_scale, (float)j / temp_scale) * amplitude;
 
                         max_amp += amplitude;
                         amplitude *= _persistence;
-                        _scale = (int)Math.Round(_scale / _lacunarity, MidpointRounding.AwayFromZero);
+                        temp_scale = (int)Math.Round(temp_scale / _lacunarity, MidpointRounding.AwayFromZero);
                         temp_octs--;
                     }
 
                     map[i, j] /= max_amp;
-                    _scale = temp_scale;
                 }
 
             return map;
         }
 
-        float GenNoise(int x, int y)
+        private float Generate(float x, float y)
         {
-            float n0 = 0f, n1 = 0f, n2 = 0f;
+            const float F2 = 0.366025403f; // F2 = 0.5*(sqrt(3.0)-1.0)
+            const float G2 = 0.211324865f; // G2 = (3.0-Math.sqrt(3.0))/6.0
 
-            var xScaled = x * Scale / (float)Math.Sqrt(3);
-            var yScaled = y * Scale / (float)Math.Sqrt(3);
-            float s = (xScaled + yScaled) * K1,
-                i = (float)Math.Floor(xScaled + s),
-                j = (float)Math.Floor(yScaled + s),
-                t = (i + j) * K2,
-                X0 = i - t, // Unskew the cell origin back to (x,y) space
-                Y0 = j - t,
-                x0 = xScaled - X0, // The x,y distances from the cell origin
-                y0 = yScaled - Y0;
+            float n0, n1, n2; // Noise contributions from the three corners
 
+            // Skew the input space to determine which simplex cell we're in
+            var s = (x + y) * F2; // Hairy factor for 2D
+            var xs = x + s;
+            var ys = y + s;
+            var i = FastFloor(xs);
+            var j = FastFloor(ys);
+
+            var t = (i + j) * G2;
+            var X0 = i - t; // Unskew the cell origin back to (x,y) space
+            var Y0 = j - t;
+            var x0 = x - X0; // The x,y distances from the cell origin
+            var y0 = y - Y0;
+
+            // For the 2D case, the simplex shape is an equilateral triangle.
+            // Determine which simplex we are in.
             int i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords
             if (x0 > y0)
-            {
-                i1 = 1;
-                j1 = 0;
-            } // lower triangle, XY order: (0,0)->(1,0)->(1,1)
+            { i1 = 1; j1 = 0; } // lower triangle, XY order: (0,0)->(1,0)->(1,1)
             else
-            {
-                i1 = 0;
-                j1 = 1;
-            }
+            { i1 = 0; j1 = 1; }      // upper triangle, YX order: (0,0)->(0,1)->(1,1)
 
-            // upper triangle, YX order: (0,0)->(0,1)->(1,1)
             // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
             // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
             // c = (3-sqrt(3))/6
-            var x1 = x0 - i1 + K2;
-            var y1 = y0 - j1 + K2;
-            var x2 = x0 - 1.0f + 2.0f * K2;
-            var y2 = y0 - 1.0f + 2.0f * K2;
 
+            var x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords
+            var y1 = y0 - j1 + G2;
+            var x2 = x0 - 1.0f + 2.0f * G2; // Offsets for last corner in (x,y) unskewed coords
+            var y2 = y0 - 1.0f + 2.0f * G2;
+
+            // Wrap the integer indices at 256, to avoid indexing perm[] out of bounds
+            var ii = Mod(i, 256);
+            var jj = Mod(j, 256);
+
+            // Calculate the contribution from the three corners
             var t0 = 0.5f - x0 * x0 - y0 * y0;
-            if (t0 >= 0)
+            if (t0 < 0.0f)
+                n0 = 0.0f;
+            else
             {
-                var g0 = GetGradient(i, j);
                 t0 *= t0;
-                n0 = t0 * t0 * (g0.X * x0 + g0.Y * y0);
+                n0 = t0 * t0 * Grad(_seedNums[ii + _seedNums[jj]], x0, y0);
             }
 
             var t1 = 0.5f - x1 * x1 - y1 * y1;
-            if (t1 >= 0)
+            if (t1 < 0.0f)
+                n1 = 0.0f;
+            else
             {
-                var g1 = GetGradient(i + i1, j + j1);
                 t1 *= t1;
-                n1 = t1 * t1 * (g1.X * x1 + g1.Y * y1);
+                n1 = t1 * t1 * Grad(_seedNums[ii + i1 + _seedNums[jj + j1]], x1, y1);
             }
 
             var t2 = 0.5f - x2 * x2 - y2 * y2;
-            if (t2 >= 0)
+            if (t2 < 0.0f)
+                n2 = 0.0f;
+            else
             {
-                var g2 = GetGradient(i + 1, j + 1);
                 t2 *= t2;
-                n2 = t2 * t2 * (g2.X * x2 + g2.Y * y2);
+                n2 = t2 * t2 * Grad(_seedNums[ii + 1 + _seedNums[jj + 1]], x2, y2);
             }
 
-            return 70.0f * (n0 + n1 + n2);
+            // Add contributions from each corner to get the final noise value.
+            // The result is scaled to return values in the interval [-1,1].
+            return 40.0f * (n0 + n1 + n2); // TODO: The scale factor is preliminary!
         }
 
-        private Vector2 GetGradient(float x, float y)
+        private static int FastFloor(float x)
         {
-            var hash = BitConverter.ToInt64(SHA512.HashData(BitConverter.GetBytes(x).Concat(BitConverter.GetBytes(y)).ToArray()));
-            return s_gradients[_seedNums[Math.Abs(hash) % _seedNums.Length]];
+            return (x > 0) ? ((int)x) : (((int)x) - 1);
+        }
+
+        private static int Mod(int x, int m)
+        {
+            var a = x % m;
+            return a < 0 ? a + m : a;
+        }
+
+        private static float Grad(int hash, float x, float y)
+        {
+            var h = hash & 7;      // Convert low 3 bits of hash code
+            var u = h < 4 ? x : y;  // into 8 simple gradient directions,
+            var v = h < 4 ? y : x;  // and compute the dot product with (x,y).
+            return ((h & 1) != 0 ? -u : u) + ((h & 2) != 0 ? -2.0f * v : 2.0f * v);
         }
     }
 }
