@@ -8,7 +8,7 @@ namespace TerrainGenerator
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
-        readonly int[] _seedNums;
+        readonly byte[] _seedNums;
         readonly Vector2[] _gradients;
 
         public PerlinNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int? seed = null)
@@ -26,12 +26,11 @@ namespace TerrainGenerator
                 _gradients[i].Y = (float)Math.Sin(val);
             }
 
-            Seed = seed ?? Environment.TickCount;
-            var rd = new Random(Seed);
+            _seed = seed ?? Environment.TickCount;
+            var rd = new Random(_seed);
 
-            _seedNums = new int[256];
-            for (var i = 0; i < _seedNums.Length; i++)
-                _seedNums[i] = rd.Next(0, _gradients.Length);
+            _seedNums = new byte[256];
+            rd.NextBytes(_seedNums);
         }
 
         public int Scale
@@ -61,12 +60,17 @@ namespace TerrainGenerator
         public int Seed
         {
             get => _seed;
-            set => _seed = value;
+            set
+            {
+                _seed = value;
+                var rd = new Random(_seed);
+                rd.NextBytes(_seedNums);
+            }
         }
 
-        float GenNoise(int x, int y)
+        float GenNoise(int x, int y, int scale)
         {
-            var pos = new Vector2((float)x / Scale, (float)y / Scale);
+            var pos = new Vector2((float)x / scale, (float)y / scale);
 
             var x0 = (float)Math.Floor(pos.X);
             var x1 = x0 + 1;
@@ -112,16 +116,15 @@ namespace TerrainGenerator
 
                     while (temp_octs > 0)
                     {
-                        map[i, j] += GenNoise(i, j) * amplitude;
+                        map[i, j] += GenNoise(i, j, temp_scale) * amplitude;
 
                         max_amp += amplitude;
                         amplitude *= _persistence;
-                        _scale = (int)Math.Round(_scale / _lacunarity, MidpointRounding.AwayFromZero);
+                        temp_scale = (int)Math.Round(temp_scale / _lacunarity, MidpointRounding.AwayFromZero);
                         temp_octs--;
                     }
 
                     map[i, j] /= max_amp;
-                    _scale = temp_scale;
                 }
 
             return map;
