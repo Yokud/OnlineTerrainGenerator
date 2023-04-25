@@ -148,7 +148,7 @@
                     NoiseMap[i, j] = (NoiseMap[i, j] - h_min) / delta;
         }
 
-        void GenMap()
+        public void GenMap()
         {
             NoiseMap = LandGenerator.GenMap(Width, Height);
 
