@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Routing;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using TerrainGenerator;
@@ -11,6 +12,12 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapLogic
         HeightMap _heightMap;
 
         private const int Size = 513;
+        private static readonly ColorScheme colorScheme = new() { new ColorSchemeUnit(Color.DarkBlue, 75),
+                                                                              new ColorSchemeUnit(Color.Blue, 135),
+                                                                              new ColorSchemeUnit(Color.Yellow, 150),
+                                                                              new ColorSchemeUnit(Color.LightGreen, 205),
+                                                                              new ColorSchemeUnit(Color.DarkGray, 240),
+                                                                              new ColorSchemeUnit(Color.White, 255)};
 
         private static ILandGenerator CreateLandGenerator(GenerationAlgoritm algoritm, float[] optns)
         {
@@ -47,6 +54,16 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapLogic
             _heightMap.NoiseExpression = new NoiseExpresion(parameters.NoiseExpression);
         }
 
-        
+        public Image<Rgba32> GetHeightMap()
+        {
+            return _heightMap?.GetGrayscaledImage();
+        }
+
+        public Image<Rgba32> GetColoredHeightMap()
+        {
+            return _heightMap?.GetColoredImage(colorScheme);
+        }
+
+
     }
 }
