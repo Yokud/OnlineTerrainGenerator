@@ -19,7 +19,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
         public static HeigthMapParameters JsonParser(string jsonString)
         {
             HeigthMapParameters parameters;
-            JObject jsonObject = JObject.Parse(jsonString);
+            var jsonObject = JObject.Parse(jsonString);
 
             string func = (string)jsonObject["func"];
             string alg = (string)jsonObject["alg"];
@@ -34,12 +34,12 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
             return parameters;
         }
 
-        public static Func<double, double> HeigthMapFunction(string expression)
+        public static Func<float, float> HeigthMapFunction(string expression)
         {
-            var x = Expression.Parameter(typeof(double), "x");
+            var x = Expression.Parameter(typeof(float), "x");
             var lambda = DynamicExpressionParser.ParseLambda(new[] { x }, null, expression);
 
-            return (Func<double, double>)lambda.Compile();
+            return (Func<float, float>)lambda.Compile();
         }
     }
 }
