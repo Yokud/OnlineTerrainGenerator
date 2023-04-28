@@ -41,7 +41,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
         public static Func<float, float> HeigthMapFunction(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression))
-                return new Func<float, float>(x => x);
+                return null;
 
             var x = Expression.Parameter(typeof(float), "x");
             var lambda = DynamicExpressionParser.ParseLambda(new[] { x }, null, expression);
