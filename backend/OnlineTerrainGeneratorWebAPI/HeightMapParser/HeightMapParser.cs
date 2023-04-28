@@ -8,10 +8,14 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
 
     public static class HeightMapParser
     {
+        public enum Algoritm
+        {
+            DiamondSquare, PerlinNoise, SimplexNoise
+        }
         public struct HeigthMapParameters
         {
             public string func;
-            public string alg;
+            public Algoritm alg;
             public float[] options;
         };
         
@@ -28,7 +32,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
             float[] optionsArray = options.ToObject<float[]>();
 
             parameters.func = func;
-            parameters.alg = alg;
+            parameters.alg = (Algoritm)Enum.Parse(typeof(Algoritm), alg);
             parameters.options = optionsArray;
 
             return parameters;
