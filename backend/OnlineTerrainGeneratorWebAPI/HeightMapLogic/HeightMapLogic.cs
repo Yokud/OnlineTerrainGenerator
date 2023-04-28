@@ -17,13 +17,13 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
                                                                     new ColorSchemeUnit(Color.DarkGray, 240),
                                                                     new ColorSchemeUnit(Color.White, 255)};
 
-        private static ILandGenerator? CreateLandGenerator(GenerationAlgorithm algorithm, float[] options)
+        private static ILandGenerator? CreateLandGenerator(GenerationAlgorithm algorithm, float?[] options)
         {
             return algorithm switch
             {
-                GenerationAlgorithm.DiamondSquare => new DiamondSquare(options[0], (int?)options[1]),
-                GenerationAlgorithm.PerlinNoise => new PerlinNoise((int)options[0], (int)options[1], options[2], options[3], (int?)options[4]),
-                GenerationAlgorithm.SimplexNoise => new SimplexNoise((int)options[0], (int)options[1], options[2], options[3], (int?)options[4]),
+                GenerationAlgorithm.DiamondSquare => new DiamondSquare(options[0].Value, (int?)options[1]),
+                GenerationAlgorithm.PerlinNoise => new PerlinNoise((int)options[0], (int)options[1], options[2].Value, options[3].Value, (int?)options[4]),
+                GenerationAlgorithm.SimplexNoise => new SimplexNoise((int)options[0], (int)options[1], options[2].Value, options[3].Value, (int?)options[4]),
                 _ => null,
             };
         }
@@ -55,7 +55,5 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
         {
             return _heightMap?.GetColoredImage(s_colorScheme);
         }
-
-
     }
 }

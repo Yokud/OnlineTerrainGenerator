@@ -17,7 +17,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
         {
             public Func<float, float> NoiseExpression;
             public GenerationAlgorithm Algorithm;
-            public float[] AlgorithmParams;
+            public float?[] AlgorithmParams;
         };
         
         public static HeigthMapParams JsonParser(string jsonString)
@@ -29,7 +29,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
             var alg = (string)jsonObject["alg"];
             var options = (JArray)jsonObject["options"];
 
-            var optionsArray = options.ToObject<float[]>();
+            var optionsArray = options.ToObject<float?[]>();
 
             parameters.NoiseExpression = HeigthMapFunction(func);
             parameters.Algorithm = (GenerationAlgorithm)Enum.Parse(typeof(GenerationAlgorithm), alg);

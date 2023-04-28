@@ -31,7 +31,7 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         {
             var img = _heightMapLogic.GetHeightMap();
 
-            return (img is null) ? BadRequest() : Ok(_urlCreator.CreateImageUrl(Request, img, "grayscaled.png"));
+            return (img is null) ? NoContent() : Ok(_urlCreator.CreateImageUrl(Request, img, "grayscaled.png"));
         }
 
         [HttpPut]

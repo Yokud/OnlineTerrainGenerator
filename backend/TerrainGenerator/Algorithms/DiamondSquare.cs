@@ -8,7 +8,7 @@
 
         public DiamondSquare(float roughness = 0.5f, int? seed = null)
         {
-            _roughness = roughness;
+            Roughness = roughness;
 
             _seed = seed ?? Environment.TickCount;
             _random = new Random(_seed);
