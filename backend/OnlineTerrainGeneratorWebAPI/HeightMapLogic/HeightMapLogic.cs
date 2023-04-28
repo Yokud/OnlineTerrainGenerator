@@ -10,29 +10,26 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapLogic
         HeightMap _heightMap;
 
         private const int Size = 512;
-        public HeightMapLogic() { }
 
         public HeightMapLogic(string JsonString)
         {
-            HeigthMapParameters parameters = JsonParser(JsonString);
-            var optns = parameters.options;
+            var parameters = JsonParser(JsonString);
+            var optns = parameters.AlgorithmParams;
             ILandGenerator landGenerator;
 
-            var expression = HeigthMapFunction(parameters.func);
-
-            switch (parameters.alg)
+            switch (parameters.Algorithm)
             {
-                case Algoritm.DiamondSquare:
-                    landGenerator = new DiamondSquare(optns[0], (int)optns[1]);
-                    _heightMap = new HeightMap(Size + 1, Size + 1, landGenerator, new NoiseExpresion(expression));
+                case GenerationAlgoritm.DiamondSquare:
+                    landGenerator = new DiamondSquare(optns[0], (int?)optns[1]);
+                    _heightMap = new HeightMap(Size + 1, Size + 1, landGenerator, new NoiseExpresion(parameters.NoiseExpression));
                     break;
-                case Algoritm.PerlinNoise:
-                    landGenerator = new PerlinNoise((int)optns[0], (int)optns[1], optns[2], optns[3], (int)optns[4]);
-                    _heightMap = new HeightMap(Size, Size, landGenerator, new NoiseExpresion(expression));
+                case GenerationAlgoritm.PerlinNoise:
+                    landGenerator = new PerlinNoise((int)optns[0], (int)optns[1], optns[2], optns[3], (int?)optns[4]);
+                    _heightMap = new HeightMap(Size, Size, landGenerator, new NoiseExpresion(parameters.NoiseExpression));
                     break;
-                case Algoritm.SimplexNoise:
-                    landGenerator = new SimplexNoise((int)optns[0], (int)optns[1], optns[2], optns[3], (int)optns[4]);
-                    _heightMap = new HeightMap(Size, Size, landGenerator, new NoiseExpresion(expression));
+                case GenerationAlgoritm.SimplexNoise:
+                    landGenerator = new SimplexNoise((int)optns[0], (int)optns[1], optns[2], optns[3], (int?)optns[4]);
+                    _heightMap = new HeightMap(Size, Size, landGenerator, new NoiseExpresion(parameters.NoiseExpression));
                     break;
                 default:
                     break;

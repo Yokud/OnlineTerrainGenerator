@@ -4,42 +4,45 @@ using Newtonsoft.Json.Linq;
 
 namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
 {
-    
-
     public static class HeightMapParser
     {
-        public enum Algoritm
+        public enum GenerationAlgoritm
         {
-            DiamondSquare, PerlinNoise, SimplexNoise
+            DiamondSquare,
+            PerlinNoise,
+            SimplexNoise
         }
-        public struct HeigthMapParameters
+
+        public struct HeigthMapParams
         {
-            public string func;
-            public Algoritm alg;
-            public float[] options;
+            public Func<float, float> NoiseExpression;
+            public GenerationAlgoritm Algorithm;
+            public float[] AlgorithmParams;
         };
         
-
-        public static HeigthMapParameters JsonParser(string jsonString)
+        public static HeigthMapParams JsonParser(string jsonString)
         {
-            HeigthMapParameters parameters;
+            HeigthMapParams parameters;
             var jsonObject = JObject.Parse(jsonString);
 
-            string func = (string)jsonObject["func"];
-            string alg = (string)jsonObject["alg"];
-            JArray options = (JArray)jsonObject["options"];
+            var func = (string)jsonObject["func"];
+            var alg = (string)jsonObject["alg"];
+            var options = (JArray)jsonObject["options"];
 
-            float[] optionsArray = options.ToObject<float[]>();
+            var optionsArray = options.ToObject<float[]>();
 
-            parameters.func = func;
-            parameters.alg = (Algoritm)Enum.Parse(typeof(Algoritm), alg);
-            parameters.options = optionsArray;
+            parameters.NoiseExpression = HeigthMapFunction(func);
+            parameters.Algorithm = (GenerationAlgoritm)Enum.Parse(typeof(GenerationAlgoritm), alg);
+            parameters.AlgorithmParams = optionsArray;
 
             return parameters;
         }
 
         public static Func<float, float> HeigthMapFunction(string expression)
         {
+            if (string.IsNullOrWhiteSpace(expression))
+                return new Func<float, float>(x => x);
+
             var x = Expression.Parameter(typeof(float), "x");
             var lambda = DynamicExpressionParser.ParseLambda(new[] { x }, null, expression);
 
