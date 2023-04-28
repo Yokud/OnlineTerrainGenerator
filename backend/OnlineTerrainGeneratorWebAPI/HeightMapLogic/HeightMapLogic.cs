@@ -3,11 +3,11 @@ using SixLabors.ImageSharp.PixelFormats;
 using TerrainGenerator;
 using static OnlineTerrainGeneratorWebAPI.HeightMapParser.HeightMapParser;
 
-namespace OnlineTerrainGeneratorWebAPI.HeightMapLogic
+namespace OnlineTerrainGeneratorWebAPI.Logic
 {
     public class HeightMapLogic
     {
-        readonly HeightMap _heightMap;
+        HeightMap _heightMap;
 
         private const int Size = 513;
         private static readonly ColorScheme s_colorScheme = new() { new ColorSchemeUnit(Color.DarkBlue, 75),
@@ -27,7 +27,8 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapLogic
                 _ => null,
             };
         }
-        public HeightMapLogic(string jsonString)
+
+        public void CreateHeightMap(string jsonString)
         {
             var parameters = JsonParser(jsonString);
             var optns = parameters.AlgorithmParams;
@@ -36,7 +37,6 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapLogic
             _heightMap = new HeightMap(Size, Size, landGenerator, new NoiseExpresion(parameters.NoiseExpression));
 
         }
-
         public void UpdateHeightMap(string jsonString)
         {
             var parameters = JsonParser(jsonString);
