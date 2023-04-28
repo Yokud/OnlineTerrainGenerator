@@ -7,7 +7,7 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
 {
     public class HeightMapLogic
     {
-        HeightMap _heightMap;
+        HeightMap? _heightMap;
 
         private const int Size = 513;
         private static readonly ColorScheme s_colorScheme = new() { new ColorSchemeUnit(Color.DarkBlue, 75),
@@ -34,15 +34,16 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
             var optns = parameters.AlgorithmParams;
             var landGenerator = CreateLandGenerator(parameters.Algorithm, parameters.AlgorithmParams);
 
-            _heightMap = new HeightMap(Size, Size, landGenerator, new NoiseExpresion(parameters.NoiseExpression));
+            _heightMap = new HeightMap(Size, Size, landGenerator, parameters.NoiseExpression is not null ? new NoiseExpresion(parameters.NoiseExpression) : null);
 
         }
+
         public void UpdateHeightMap(string jsonString)
         {
             var parameters = JsonParser(jsonString);
             var optns = parameters.AlgorithmParams;
-            _heightMap.LandGenerator = CreateLandGenerator(parameters.Algorithm, parameters.AlgorithmParams);
-            _heightMap.NoiseExpression = new NoiseExpresion(parameters.NoiseExpression);
+            _heightMap!.LandGenerator = CreateLandGenerator(parameters.Algorithm, parameters.AlgorithmParams);
+            _heightMap!.NoiseExpression = parameters.NoiseExpression is not null ? new NoiseExpresion(parameters.NoiseExpression) : null;
         }
 
         public Image<Rgba32>? GetHeightMap()

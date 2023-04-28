@@ -1,11 +1,10 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineTerrainGeneratorWebAPI.Logic;
 
 namespace OnlineTerrainGeneratorWebAPI.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class HeightMapController : Controller
     {
         HeightMapLogic _heightMapLogic;
@@ -17,8 +16,8 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
             _urlCreator= new UrlCreator(webHostEnvironment);
         }
 
-        [HttpGet]
-        public IActionResult GetColoredHeightMap([FromBody] string jsonString)
+        [HttpGet("colored")]
+        public IActionResult GetColoredHeightMap([FromQuery] string jsonString)
         {
             _heightMapLogic.CreateHeightMap(jsonString);
 
@@ -27,16 +26,22 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
             return (img is null) ? BadRequest() : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
         }
 
-        [HttpGet]
+        [HttpGet("grayscaled")]
         public IActionResult GetHeightMap()
         {
+            var img = _heightMapLogic.GetHeightMap();
 
+            return (img is null) ? BadRequest() : Ok(_urlCreator.CreateImageUrl(Request, img, "grayscaled.png"));
         }
 
         [HttpPut]
-        public IActionResult UpdateHeightMap([FromBody] string jsonString)
+        public IActionResult UpdateHeightMap([FromQuery] string jsonString)
         {
+            _heightMapLogic.UpdateHeightMap(jsonString);
 
+            var img = _heightMapLogic.GetColoredHeightMap();
+
+            return (img is null) ? BadRequest() : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
         }
     }
 }
