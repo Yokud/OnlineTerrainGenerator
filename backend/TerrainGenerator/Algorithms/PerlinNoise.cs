@@ -5,13 +5,16 @@ namespace TerrainGenerator
 {
     public class PerlinNoise : ILandGenerator
     {
+        public const int DefaultOctaves = 1;
+        public const float DefaultLacunarity = 2f, DefaultPersistense = 0.5f;
+
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
         readonly byte[] _seedNums;
         readonly Vector2[] _gradients;
 
-        public PerlinNoise(int scale, int octaves = 1, float lacunarity = 2f, float persistence = 0.5f, int? seed = null)
+        public PerlinNoise(int scale, int octaves = DefaultOctaves, float lacunarity = DefaultLacunarity, float persistence = DefaultPersistense, int? seed = null)
         {
             Scale = scale;
             Octaves = octaves;
@@ -36,25 +39,25 @@ namespace TerrainGenerator
         public int Scale
         {
             get => _scale;
-            set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
+            set => _scale = value > 0 ? value : throw new ArgumentException("Scale is positive value", nameof(Scale));
         }
 
         public int Octaves
         {
             get => _octaves;
-            set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
+            set => _octaves = value > 0 ? value : throw new ArgumentException("Octaves is positive value", nameof(Octaves));
         }
 
         public float Lacunarity
         {
             get => _lacunarity;
-            set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
+            set => _lacunarity = value > 0 ? value : throw new ArgumentException("Lacunarity is positive value", nameof(Lacunarity));
         }
 
         public float Persistence
         {
             get => _persistence;
-            set => _persistence = value > 0 ? value : throw new Exception("Persistence is positive value");
+            set => _persistence = value > 0 ? value : throw new ArgumentException("Persistence is positive value", nameof(Persistence));
         }
 
         public int Seed
