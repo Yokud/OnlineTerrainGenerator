@@ -24,25 +24,25 @@
         public int Scale
         {
             get => _scale;
-            set => _scale = value > 0 ? value : throw new Exception("Scale is positive value");
+            set => _scale = value > 0 ? value : throw new ArgumentException("Scale is positive value");
         }
 
         public int Octaves
         {
             get => _octaves;
-            set => _octaves = value > 0 ? value : throw new Exception("Octaves is positive value");
+            set => _octaves = value > 0 ? value : throw new ArgumentException("Octaves is positive value");
         }
 
         public float Lacunarity
         {
             get => _lacunarity;
-            set => _lacunarity = value > 0 ? value : throw new Exception("Lacunarity is positive value");
+            set => _lacunarity = value > 0 ? value : throw new ArgumentException("Lacunarity is positive value");
         }
 
         public float Persistence
         {
             get => _persistence;
-            set => _persistence = value > 0 ? value : throw new Exception("Persistence is positive value");
+            set => _persistence = value > 0 ? value : throw new ArgumentException("Persistence is positive value");
         }
 
         public int Seed

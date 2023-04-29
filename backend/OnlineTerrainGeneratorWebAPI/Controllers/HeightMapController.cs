@@ -19,11 +19,18 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         [HttpGet("colored")]
         public IActionResult GetColoredHeightMap([FromQuery] string jsonString)
         {
-            _heightMapLogic.CreateHeightMap(jsonString);
+            try
+            {
+                _heightMapLogic.CreateHeightMap(jsonString);
 
-            var img = _heightMapLogic.GetColoredHeightMap();
+                var img = _heightMapLogic.GetColoredHeightMap();
 
-            return (img is null) ? BadRequest() : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
+                return (img is null) ? BadRequest("Coudn't upload image.") : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("grayscaled")]
@@ -37,11 +44,20 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         [HttpPut]
         public IActionResult UpdateHeightMap([FromQuery] string jsonString)
         {
-            _heightMapLogic.UpdateHeightMap(jsonString);
+            try
+            {
 
-            var img = _heightMapLogic.GetColoredHeightMap();
 
-            return (img is null) ? BadRequest() : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
+                _heightMapLogic.UpdateHeightMap(jsonString);
+
+                var img = _heightMapLogic.GetColoredHeightMap();
+
+                return (img is null) ? BadRequest("Coudn't upload image.") : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
