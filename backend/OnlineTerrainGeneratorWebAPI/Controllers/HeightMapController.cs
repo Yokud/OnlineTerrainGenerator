@@ -46,8 +46,6 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         {
             try
             {
-
-
                 _heightMapLogic.UpdateHeightMap(heightMapParams);
 
                 var img = _heightMapLogic.GetColoredHeightMap();
