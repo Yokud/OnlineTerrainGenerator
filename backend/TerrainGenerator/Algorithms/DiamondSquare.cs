@@ -2,11 +2,13 @@
 {
     public class DiamondSquare : ILandGenerator
     {
+        public const float DefaultRoughness = 0.5f;
+
         int _seed;
         float _roughness;
         Random _random;
 
-        public DiamondSquare(float roughness = 0.5f, int? seed = null)
+        public DiamondSquare(float roughness = DefaultRoughness, int? seed = null)
         {
             Roughness = roughness;
 
@@ -27,7 +29,7 @@
         public float Roughness
         {
             get => _roughness;
-            set => _roughness = value >= 0 && value <= 1 ? value : throw new ArgumentException("Roughness factor must be between 0 and 1");
+            set => _roughness = value >= 0 && value <= 1 ? value : throw new ArgumentException("Roughness factor must be between 0 and 1", nameof(Roughness));
         }
 
         public float[,] GenMap(int width, int height)

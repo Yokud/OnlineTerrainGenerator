@@ -17,16 +17,13 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
                                                                     new ColorSchemeUnit(Color.DarkGray, 240),
                                                                     new ColorSchemeUnit(Color.White, 255)};
 
-        private static ILandGenerator? CreateLandGenerator(GenerationAlgorithm algorithm, float?[] options)
+        private static ILandGenerator? CreateLandGenerator(GenerationAlgorithm algorithm, float?[] options) => algorithm switch
         {
-            return algorithm switch
-            {
-                GenerationAlgorithm.DiamondSquare => new DiamondSquare(options[0].Value, (int?)options[1]),
-                GenerationAlgorithm.PerlinNoise => new PerlinNoise((int)options[0], (int)options[1], options[2].Value, options[3].Value, (int?)options[4]),
-                GenerationAlgorithm.SimplexNoise => new SimplexNoise((int)options[0], (int)options[1], options[2].Value, options[3].Value, (int?)options[4]),
-                _ => null,
-            };
-        }
+            GenerationAlgorithm.DiamondSquare => new DiamondSquare(options[0] ?? DiamondSquare.DefaultRoughness, (int?)options[1]),
+            GenerationAlgorithm.PerlinNoise => new PerlinNoise((int)options[0], options[1].HasValue ? (int)options[1]!.Value : PerlinNoise.DefaultOctaves, options[2] ?? PerlinNoise.DefaultLacunarity, options[3] ?? PerlinNoise.DefaultPersistense, (int?)options[4]),
+            GenerationAlgorithm.SimplexNoise => new SimplexNoise((int)options[0], options[1].HasValue ? (int)options[1]!.Value : SimplexNoise.DefaultOctaves, options[2] ?? SimplexNoise.DefaultLacunarity, options[3] ?? SimplexNoise.DefaultPersistense, (int?)options[4]),
+            _ => null,
+        };
 
         public void CreateHeightMap(string jsonString)
         {

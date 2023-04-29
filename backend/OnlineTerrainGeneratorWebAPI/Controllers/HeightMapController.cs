@@ -7,8 +7,8 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
     [ApiController]
     public class HeightMapController : Controller
     {
-        HeightMapLogic _heightMapLogic;
-        UrlCreator _urlCreator;
+        readonly HeightMapLogic _heightMapLogic;
+        readonly UrlCreator _urlCreator;
 
         public HeightMapController(HeightMapLogic heightMapLogic, IWebHostEnvironment webHostEnvironment)
         {
@@ -17,11 +17,11 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         }
 
         [HttpGet("colored")]
-        public IActionResult GetColoredHeightMap([FromQuery] string jsonString)
+        public IActionResult GetColoredHeightMap([FromQuery] string heightMapParams)
         {
             try
             {
-                _heightMapLogic.CreateHeightMap(jsonString);
+                _heightMapLogic.CreateHeightMap(heightMapParams);
 
                 var img = _heightMapLogic.GetColoredHeightMap();
 
@@ -42,13 +42,13 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateHeightMap([FromQuery] string jsonString)
+        public IActionResult UpdateHeightMap([FromQuery] string heightMapParams)
         {
             try
             {
 
 
-                _heightMapLogic.UpdateHeightMap(jsonString);
+                _heightMapLogic.UpdateHeightMap(heightMapParams);
 
                 var img = _heightMapLogic.GetColoredHeightMap();
 
