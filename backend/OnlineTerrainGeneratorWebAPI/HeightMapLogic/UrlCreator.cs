@@ -5,7 +5,7 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
 {
     public class UrlCreator
     {
-        IWebHostEnvironment _hostingEnvironment;
+        readonly IWebHostEnvironment _hostingEnvironment;
 
         public UrlCreator(IWebHostEnvironment hostingEnvironment)
         {
