@@ -12,8 +12,8 @@
     {
         int _width, _height;
         NoiseExpresion? _expresion;
-
         ILandGenerator _generator;
+        float[,] _noiseMap;
 
         public HeightMap(int width, int height, ILandGenerator lg, NoiseExpresion? exp = null)
         {
@@ -29,7 +29,7 @@
         {
             Width = h.Width;
             Height = h.Height;
-            NoiseMap = h.NoiseMap;
+            _noiseMap = h._noiseMap;
             LandGenerator = h.LandGenerator;
             Seed = h.Seed;
         }
@@ -72,24 +72,24 @@
             }
         }
 
-        float[,] NoiseMap { get; set; }
+        public float[,] RawData => _noiseMap;
 
         public float this[int i, int j]
         {
-            get => NoiseMap[i, j];
-            set => NoiseMap[i, j] = value;
+            get => _noiseMap[i, j];
+            set => _noiseMap[i, j] = value;
         }
 
         private (float, float) MinMax()
         {
-            var max = NoiseMap[0, 0];
+            var max = _noiseMap[0, 0];
             var min = max;
 
             for (var i = 0; i < _width; i++)
                 for (var j = 0; j < _height; j++)
                 {
-                    min = NoiseMap[i, j] < min ? NoiseMap[i, j] : min;
-                    max = NoiseMap[i, j] > max ? NoiseMap[i, j] : max;
+                    min = _noiseMap[i, j] < min ? _noiseMap[i, j] : min;
+                    max = _noiseMap[i, j] > max ? _noiseMap[i, j] : max;
                 }
 
             return (min, max);
@@ -102,12 +102,12 @@
 
             for (var i = 0; i < Width; i++)
                 for (var j = 0; j < Height; j++)
-                    NoiseMap[i, j] = (NoiseMap[i, j] - h_min) / delta;
+                    _noiseMap[i, j] = (_noiseMap[i, j] - h_min) / delta;
         }
 
         public void GenMap()
         {
-            NoiseMap = LandGenerator.GenMap(Width, Height);
+            _noiseMap = LandGenerator.GenMap(Width, Height);
 
             if (NoiseExpression != null)
             {
@@ -115,7 +115,7 @@
 
                 for (var i = 0; i < _width; i++)
                     for (var j = 0; j < _height; j++)
-                        NoiseMap[i, j] = NoiseExpression(NoiseMap[i, j]);
+                        _noiseMap[i, j] = NoiseExpression(_noiseMap[i, j]);
             }
         }
 
@@ -131,7 +131,7 @@
                 {
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
-                        pixelRow[j] = Color.FromRgba((byte)(NoiseMap[i, j] * 255), (byte)(NoiseMap[i, j] * 255), (byte)(NoiseMap[i, j] * 255), 255);
+                        pixelRow[j] = Color.FromRgba((byte)(_noiseMap[i, j] * 255), (byte)(_noiseMap[i, j] * 255), (byte)(_noiseMap[i, j] * 255), 255);
                 }
             });
 
@@ -150,7 +150,7 @@
                 {
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
-                        pixelRow[j] = colorScheme.GetColorFromGrayscale((byte)(NoiseMap[i, j] * 255));
+                        pixelRow[j] = colorScheme.GetColorFromGrayscale((byte)(_noiseMap[i, j] * 255));
                 }
             });
 
