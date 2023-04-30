@@ -13,7 +13,7 @@ namespace UnitTests
 
             var act = hm.GetGrayscaledImage();
 
-            Assert.True(act is Image<Rgba32>);
+            Assert.True(act is not null);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace UnitTests
 
             var act = hm.GetColoredImage(colorScheme);
 
-            Assert.True(act is Image<Rgba32>);
+            Assert.True(act is not null);
         }
 
         [Fact]
