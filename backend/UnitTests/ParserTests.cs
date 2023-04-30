@@ -1,4 +1,6 @@
-﻿namespace UnitTests
+﻿using System.Linq.Dynamic.Core.Exceptions;
+
+namespace UnitTests
 {
     public class ParserTests
     {
@@ -45,10 +47,11 @@
         public void ParseFunctionTest()
         {
             var arg = "x * x";
+            var exp = new Func<float, float>(x => x * x);
 
             var act = HeightMapParser.HeigthMapFunction(arg);
 
-            Assert.Equal(4f, act(2));
+            Assert.Equal(exp(2), act(2));
         }
 
         [Fact]
@@ -59,6 +62,14 @@
             var act = HeightMapParser.HeigthMapFunction(arg);
 
             Assert.Null(act);
+        }
+
+        [Fact]
+        public void InvalidArgumentFunctionTest()
+        {
+            var arg = "a * a";
+
+            Assert.Throws<ParseException>(() => HeightMapParser.HeigthMapFunction(arg));
         }
     }
 }
