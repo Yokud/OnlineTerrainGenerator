@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OnlineTerrainGeneratorWebAPI.HeightMapParser;
-
-namespace UnitTests
+﻿namespace UnitTests
 {
     public class ParserTests
     {
@@ -32,7 +25,9 @@ namespace UnitTests
         {
             var arg = @"{""func"":"""",""alg"":""Voronoi"",""options"":[""0.3"",""123""]}";
 
-            Assert.Throws<ArgumentException>(() => HeightMapParser.JsonParser(arg));
+            var act = HeightMapParser.JsonParser(arg);
+
+            Assert.Equal(HeightMapParser.GenerationAlgorithm.Unknown, act.Algorithm);
         }
 
         [Fact]
@@ -44,6 +39,26 @@ namespace UnitTests
             var act = HeightMapParser.JsonParser(arg);
 
             Assert.True(exp.NoiseExpression == act.NoiseExpression && exp.Algorithm == act.Algorithm && Enumerable.SequenceEqual(exp.AlgorithmParams, act.AlgorithmParams));
+        }
+
+        [Fact]
+        public void ParseFunctionTest()
+        {
+            var arg = "x * x";
+
+            var act = HeightMapParser.HeigthMapFunction(arg);
+
+            Assert.Equal(4f, act(2));
+        }
+
+        [Fact]
+        public void EmptyStringParseFunctionTest()
+        {
+            var arg = "";
+
+            var act = HeightMapParser.HeigthMapFunction(arg);
+
+            Assert.Null(act);
         }
     }
 }

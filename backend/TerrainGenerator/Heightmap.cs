@@ -2,7 +2,7 @@
 {
     public delegate float NoiseExpresion(float x);
 
-    public interface ILandGenerator
+    public interface ILandGenerator : IEquatable<ILandGenerator>
     {
         int Seed { get; set; }
         float[,] GenMap(int width, int height);
@@ -80,49 +80,6 @@
             set => NoiseMap[i, j] = value;
         }
 
-        public static HeightMap Add(HeightMap h1, HeightMap h2)
-        {
-            var h_temp = new HeightMap(h1);
-
-            if (h1.Width != h2.Width || h1.Height != h2.Height)
-                throw new Exception("Sizes isn't equal");
-
-            for (var i = 0; i < h1.Width; i++)
-                for (var j = 0; j < h1.Height; j++)
-                    h_temp[i, j] += h2[i, j];
-
-            return h_temp;
-        }
-
-        public static HeightMap Subtract(HeightMap h1, HeightMap h2)
-        {
-            var h_temp = new HeightMap(h1);
-
-            if (h1.Width != h2.Width || h1.Height != h2.Height)
-                throw new Exception("Sizes isn't equal");
-
-            for (var i = 0; i < h1.Width; i++)
-                for (var j = 0; j < h1.Height; j++)
-                    h_temp[i, j] -= h2[i, j];
-
-            return h_temp;
-        }
-
-        public static HeightMap MultSingle(HeightMap h, float val)
-        {
-            var h_temp = new HeightMap(h);
-
-            for (var i = 0; i < h.Width; i++)
-                for (var j = 0; j < h.Height; j++)
-                    h_temp[i, j] *= val;
-
-            return h_temp;
-        }
-
-        public static HeightMap operator +(HeightMap h1, HeightMap h2) => Add(h1, h2);
-        public static HeightMap operator -(HeightMap h1, HeightMap h2) => Subtract(h1, h2);
-        public static HeightMap operator *(HeightMap h, float val) => MultSingle(h, val);
-
         private (float, float) MinMax()
         {
             var max = NoiseMap[0, 0];
@@ -198,6 +155,11 @@
             });
 
             return img;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is HeightMap other && Width == other.Width && Height == other.Height && LandGenerator.Equals(other.LandGenerator) && NoiseExpression?.Method.GetMethodBody() == other.NoiseExpression?.Method.GetMethodBody();
         }
     }
 }

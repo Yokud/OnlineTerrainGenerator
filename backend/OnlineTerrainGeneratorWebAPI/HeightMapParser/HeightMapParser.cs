@@ -36,7 +36,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
             var optionsArray = options.ToObject<float?[]>();
 
             parameters.NoiseExpression = HeigthMapFunction(func);
-            parameters.Algorithm = alg is not null ? (GenerationAlgorithm)Enum.Parse(typeof(GenerationAlgorithm), alg) : GenerationAlgorithm.Unknown;
+            parameters.Algorithm = alg is not null && Enum.TryParse(alg, out GenerationAlgorithm algorithm) ? algorithm : GenerationAlgorithm.Unknown;
             parameters.AlgorithmParams = optionsArray;
 
             return parameters;

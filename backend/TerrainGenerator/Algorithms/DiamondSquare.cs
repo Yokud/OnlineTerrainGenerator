@@ -32,6 +32,8 @@
             set => _roughness = value >= 0 && value <= 1 ? value : throw new ArgumentException("Roughness factor must be between 0 and 1", nameof(Roughness));
         }
 
+        public bool Equals(ILandGenerator? other) => other is DiamondSquare otherDS && Roughness == otherDS.Roughness && Seed == otherDS.Seed;
+
         public float[,] GenMap(int width, int height)
         {
             if (width != height)
