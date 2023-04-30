@@ -140,5 +140,7 @@ namespace TerrainGenerator
         }
 
         private static float SmootherStep(float t) => t * t * t * (6 * t * t - 15 * t + 10);
+
+        public bool Equals(ILandGenerator? other) => other is PerlinNoise otherPN && Scale == otherPN.Scale && Octaves == otherPN.Octaves && Lacunarity == otherPN.Lacunarity && Persistence == otherPN.Persistence && Seed == otherPN.Seed;
     }
 }

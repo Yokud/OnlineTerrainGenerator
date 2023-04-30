@@ -179,5 +179,7 @@
             var v = h < 4 ? y : x;  // and compute the dot product with (x,y).
             return ((h & 1) != 0 ? -u : u) + ((h & 2) != 0 ? -2.0f * v : 2.0f * v);
         }
+
+        public bool Equals(ILandGenerator? other) => other is SimplexNoise otherSN && Scale == otherSN.Scale && Octaves == otherSN.Octaves && Lacunarity == otherSN.Lacunarity && Persistence == otherSN.Persistence && Seed == otherSN.Seed;
     }
 }

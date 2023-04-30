@@ -2,7 +2,7 @@
 {
     public delegate float NoiseExpresion(float x);
 
-    public interface ILandGenerator
+    public interface ILandGenerator : IEquatable<ILandGenerator>
     {
         int Seed { get; set; }
         float[,] GenMap(int width, int height);
@@ -12,8 +12,8 @@
     {
         int _width, _height;
         NoiseExpresion? _expresion;
-
         ILandGenerator _generator;
+        float[,] _noiseMap;
 
         public HeightMap(int width, int height, ILandGenerator lg, NoiseExpresion? exp = null)
         {
@@ -29,7 +29,7 @@
         {
             Width = h.Width;
             Height = h.Height;
-            NoiseMap = h.NoiseMap;
+            _noiseMap = h._noiseMap;
             LandGenerator = h.LandGenerator;
             Seed = h.Seed;
         }
@@ -72,101 +72,56 @@
             }
         }
 
-        float[,] NoiseMap { get; set; }
+        public float[,] RawData => _noiseMap;
 
         public float this[int i, int j]
         {
-            get => NoiseMap[i, j];
-            set => NoiseMap[i, j] = value;
+            get => _noiseMap[i, j];
+            set => _noiseMap[i, j] = value;
         }
-
-        public static HeightMap Add(HeightMap h1, HeightMap h2)
-        {
-            var h_temp = new HeightMap(h1);
-
-            if (h1.Width != h2.Width || h1.Height != h2.Height)
-                throw new Exception("Sizes isn't equal");
-
-            for (var i = 0; i < h1.Width; i++)
-                for (var j = 0; j < h1.Height; j++)
-                    h_temp[i, j] += h2[i, j];
-
-            return h_temp;
-        }
-
-        public static HeightMap Subtract(HeightMap h1, HeightMap h2)
-        {
-            var h_temp = new HeightMap(h1);
-
-            if (h1.Width != h2.Width || h1.Height != h2.Height)
-                throw new Exception("Sizes isn't equal");
-
-            for (var i = 0; i < h1.Width; i++)
-                for (var j = 0; j < h1.Height; j++)
-                    h_temp[i, j] -= h2[i, j];
-
-            return h_temp;
-        }
-
-        public static HeightMap MultSingle(HeightMap h, float val)
-        {
-            var h_temp = new HeightMap(h);
-
-            for (var i = 0; i < h.Width; i++)
-                for (var j = 0; j < h.Height; j++)
-                    h_temp[i, j] *= val;
-
-            return h_temp;
-        }
-
-        public static HeightMap operator +(HeightMap h1, HeightMap h2) => Add(h1, h2);
-        public static HeightMap operator -(HeightMap h1, HeightMap h2) => Subtract(h1, h2);
-        public static HeightMap operator *(HeightMap h, float val) => MultSingle(h, val);
 
         private (float, float) MinMax()
         {
-            var max = NoiseMap[0, 0];
+            var max = _noiseMap[0, 0];
             var min = max;
 
             for (var i = 0; i < _width; i++)
                 for (var j = 0; j < _height; j++)
                 {
-                    min = NoiseMap[i, j] < min ? NoiseMap[i, j] : min;
-                    max = NoiseMap[i, j] > max ? NoiseMap[i, j] : max;
+                    min = _noiseMap[i, j] < min ? _noiseMap[i, j] : min;
+                    max = _noiseMap[i, j] > max ? _noiseMap[i, j] : max;
                 }
 
             return (min, max);
         }
 
-        public void Normalize()
+        void Normalize()
         {
             var (h_min, h_max) = MinMax();
             var delta = h_max - h_min;
 
             for (var i = 0; i < Width; i++)
                 for (var j = 0; j < Height; j++)
-                    NoiseMap[i, j] = (NoiseMap[i, j] - h_min) / delta;
+                    _noiseMap[i, j] = (_noiseMap[i, j] - h_min) / delta;
         }
 
         public void GenMap()
         {
-            NoiseMap = LandGenerator.GenMap(Width, Height);
+            _noiseMap = LandGenerator.GenMap(Width, Height);
 
             if (NoiseExpression != null)
+            {
+                Normalize();
+
                 for (var i = 0; i < _width; i++)
                     for (var j = 0; j < _height; j++)
-                        NoiseMap[i, j] = NoiseExpression(NoiseMap[i, j]);
+                        _noiseMap[i, j] = NoiseExpression(_noiseMap[i, j]);
+            }
         }
 
         public Image<Rgba32> GetGrayscaledImage()
         {
-            var hm = new byte[_width, _height];
-            var (h_min, h_max) = MinMax();
-            var delta = h_max - h_min;
-
-            for (var i = 0; i < Width; i++)
-                for (var j = 0; j < Height; j++)
-                    hm[i, j] = (byte)((NoiseMap[i, j] - h_min) / delta * 255);
+            Normalize();
 
             var img = new Image<Rgba32>(Width, Height);
 
@@ -176,7 +131,7 @@
                 {
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
-                        pixelRow[j] = Color.FromRgba(hm[i, j], hm[i, j], hm[i, j], 255);
+                        pixelRow[j] = Color.FromRgba((byte)(_noiseMap[i, j] * 255), (byte)(_noiseMap[i, j] * 255), (byte)(_noiseMap[i, j] * 255), 255);
                 }
             });
 
@@ -185,13 +140,7 @@
 
         public Image<Rgba32> GetColoredImage(ColorScheme colorScheme)
         {
-            var hm = new byte[_width, _height];
-            var (h_min, h_max) = MinMax();
-            var delta = h_max - h_min;
-
-            for (var i = 0; i < Width; i++)
-                for (var j = 0; j < Height; j++)
-                    hm[i, j] = (byte)((NoiseMap[i, j] - h_min) / delta * 255);
+            Normalize();
 
             var img = new Image<Rgba32>(Width, Height);
 
@@ -201,11 +150,16 @@
                 {
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
-                        pixelRow[j] = colorScheme.GetColorFromGrayscale(hm[i, j]);
+                        pixelRow[j] = colorScheme.GetColorFromGrayscale((byte)(_noiseMap[i, j] * 255));
                 }
             });
 
             return img;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is HeightMap other && Width == other.Width && Height == other.Height && LandGenerator.Equals(other.LandGenerator) && NoiseExpression?.Method.GetMethodBody() == other.NoiseExpression?.Method.GetMethodBody();
         }
     }
 }

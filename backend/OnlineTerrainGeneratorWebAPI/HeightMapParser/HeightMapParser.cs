@@ -10,7 +10,8 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
         {
             DiamondSquare,
             PerlinNoise,
-            SimplexNoise
+            SimplexNoise,
+            Unknown
         }
 
         public struct HeigthMapParams
@@ -22,6 +23,9 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
         
         public static HeigthMapParams JsonParser(string jsonString)
         {
+            if (string.IsNullOrWhiteSpace(jsonString))
+                throw new ArgumentException("Source string is null or empty", nameof(jsonString));
+
             HeigthMapParams parameters;
             var jsonObject = JObject.Parse(jsonString);
 
@@ -32,7 +36,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
             var optionsArray = options.ToObject<float?[]>();
 
             parameters.NoiseExpression = HeigthMapFunction(func);
-            parameters.Algorithm = (GenerationAlgorithm)Enum.Parse(typeof(GenerationAlgorithm), alg);
+            parameters.Algorithm = alg is not null && Enum.TryParse(alg, out GenerationAlgorithm algorithm) ? algorithm : GenerationAlgorithm.Unknown;
             parameters.AlgorithmParams = optionsArray;
 
             return parameters;
