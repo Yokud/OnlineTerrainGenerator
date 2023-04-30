@@ -138,7 +138,7 @@
             return (min, max);
         }
 
-        public void Normalize()
+        void Normalize()
         {
             var (h_min, h_max) = MinMax();
             var delta = h_max - h_min;
@@ -153,20 +153,18 @@
             NoiseMap = LandGenerator.GenMap(Width, Height);
 
             if (NoiseExpression != null)
+            {
+                Normalize();
+
                 for (var i = 0; i < _width; i++)
                     for (var j = 0; j < _height; j++)
                         NoiseMap[i, j] = NoiseExpression(NoiseMap[i, j]);
+            }
         }
 
         public Image<Rgba32> GetGrayscaledImage()
         {
-            var hm = new byte[_width, _height];
-            var (h_min, h_max) = MinMax();
-            var delta = h_max - h_min;
-
-            for (var i = 0; i < Width; i++)
-                for (var j = 0; j < Height; j++)
-                    hm[i, j] = (byte)((NoiseMap[i, j] - h_min) / delta * 255);
+            Normalize();
 
             var img = new Image<Rgba32>(Width, Height);
 
@@ -176,7 +174,7 @@
                 {
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
-                        pixelRow[j] = Color.FromRgba(hm[i, j], hm[i, j], hm[i, j], 255);
+                        pixelRow[j] = Color.FromRgba((byte)(NoiseMap[i, j] * 255), (byte)(NoiseMap[i, j] * 255), (byte)(NoiseMap[i, j] * 255), 255);
                 }
             });
 
@@ -185,13 +183,7 @@
 
         public Image<Rgba32> GetColoredImage(ColorScheme colorScheme)
         {
-            var hm = new byte[_width, _height];
-            var (h_min, h_max) = MinMax();
-            var delta = h_max - h_min;
-
-            for (var i = 0; i < Width; i++)
-                for (var j = 0; j < Height; j++)
-                    hm[i, j] = (byte)((NoiseMap[i, j] - h_min) / delta * 255);
+            Normalize();
 
             var img = new Image<Rgba32>(Width, Height);
 
@@ -201,7 +193,7 @@
                 {
                     var pixelRow = pixelAccessor.GetRowSpan(i);
                     for (var j = 0; j < _height; j++)
-                        pixelRow[j] = colorScheme.GetColorFromGrayscale(hm[i, j]);
+                        pixelRow[j] = colorScheme.GetColorFromGrayscale((byte)(NoiseMap[i, j] * 255));
                 }
             });
 
