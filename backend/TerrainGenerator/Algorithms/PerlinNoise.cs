@@ -3,10 +3,25 @@ using System.Security.Cryptography;
 
 namespace TerrainGenerator
 {
+    /// <summary>
+    /// Алгоритм генерации ландшафта на основе шума Перлина
+    /// </summary>
     public class PerlinNoise : ILandGenerator
     {
+        /// <summary>
+        /// Количество октав по умолчанию
+        /// </summary>
         public const int DefaultOctaves = 1;
-        public const float DefaultLacunarity = 2f, DefaultPersistense = 0.5f;
+
+        /// <summary>
+        /// Лакунарность по умолчанию
+        /// </summary>
+        public const float DefaultLacunarity = 2f;
+
+        /// <summary>
+        /// Устойчивость по умолчанию
+        /// </summary>
+        public const float DefaultPersistense = 0.5f;
 
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
@@ -14,6 +29,14 @@ namespace TerrainGenerator
         readonly byte[] _seedNums;
         readonly Vector2[] _gradients;
 
+        /// <summary>
+        /// Инициализция шума Перлина
+        /// </summary>
+        /// <param name="scale">Масштаб</param>
+        /// <param name="octaves">Количество октав</param>
+        /// <param name="lacunarity">Лакунарность</param>
+        /// <param name="persistence">Устойчивость</param>
+        /// <param name="seed">Зерно генерации</param>
         public PerlinNoise(int scale, int octaves = DefaultOctaves, float lacunarity = DefaultLacunarity, float persistence = DefaultPersistense, int? seed = null)
         {
             Scale = scale;
@@ -36,24 +59,36 @@ namespace TerrainGenerator
             rd.NextBytes(_seedNums);
         }
 
+        /// <summary>
+        /// Масштаб
+        /// </summary>
         public int Scale
         {
             get => _scale;
             set => _scale = value > 0 ? value : throw new ArgumentException("Scale is positive value", nameof(Scale));
         }
 
+        /// <summary>
+        /// Количество октав
+        /// </summary>
         public int Octaves
         {
             get => _octaves;
             set => _octaves = value > 0 ? value : throw new ArgumentException("Octaves is positive value", nameof(Octaves));
         }
 
+        /// <summary>
+        /// Лакунарность
+        /// </summary>
         public float Lacunarity
         {
             get => _lacunarity;
             set => _lacunarity = value > 0 ? value : throw new ArgumentException("Lacunarity is positive value", nameof(Lacunarity));
         }
 
+        /// <summary>
+        /// Устойчивость
+        /// </summary>
         public float Persistence
         {
             get => _persistence;
@@ -71,6 +106,13 @@ namespace TerrainGenerator
             }
         }
 
+        /// <summary>
+        /// Генерация шума
+        /// </summary>
+        /// <param name="x">Координата x</param>
+        /// <param name="y">Координита y</param>
+        /// <param name="scale">Масштаб</param>
+        /// <returns>Шумовое значение</returns>
         float GenNoise(int x, int y, int scale)
         {
             var pos = new Vector2((float)x / scale, (float)y / scale);
@@ -133,12 +175,23 @@ namespace TerrainGenerator
             return map;
         }
 
+        /// <summary>
+        /// Получение градиента (единичный вектор) по координатам
+        /// </summary>
+        /// <param name="x">Координата x</param>
+        /// <param name="y">Координата y</param>
+        /// <returns>Градиентный вектор</returns>
         private Vector2 GetGradient(float x, float y)
         {
             var hash = BitConverter.ToInt64(SHA512.HashData(BitConverter.GetBytes(x).Concat(BitConverter.GetBytes(y)).ToArray()));
             return _gradients[_seedNums[Math.Abs(hash) % _seedNums.Length]];
         }
 
+        /// <summary>
+        /// Функция сглаживания
+        /// </summary>
+        /// <param name="t">Параметр</param>
+        /// <returns></returns>
         private static float SmootherStep(float t) => t * t * t * (6 * t * t - 15 * t + 10);
 
         public bool Equals(ILandGenerator? other) => other is PerlinNoise otherPN && Scale == otherPN.Scale && Octaves == otherPN.Octaves && Lacunarity == otherPN.Lacunarity && Persistence == otherPN.Persistence && Seed == otherPN.Seed;

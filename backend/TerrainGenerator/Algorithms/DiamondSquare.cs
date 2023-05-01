@@ -1,13 +1,24 @@
 ﻿namespace TerrainGenerator
 {
+    /// <summary>
+    /// Алгоритм генерации ланшафта Diamond-Square
+    /// </summary>
     public class DiamondSquare : ILandGenerator
     {
+        /// <summary>
+        /// Значение шероховатости по умолчанию
+        /// </summary>
         public const float DefaultRoughness = 0.5f;
 
         int _seed;
         float _roughness;
         Random _random;
 
+        /// <summary>
+        /// Инициализация алгоритма
+        /// </summary>
+        /// <param name="roughness">Шероховатость</param>
+        /// <param name="seed">Зерно генерации</param>
         public DiamondSquare(float roughness = DefaultRoughness, int? seed = null)
         {
             Roughness = roughness;
@@ -26,6 +37,9 @@
             }
         }
 
+        /// <summary>
+        /// Шероховатость ([0; 1])
+        /// </summary>
         public float Roughness
         {
             get => _roughness;
@@ -83,6 +97,11 @@
             }
         }
 
+        /// <summary>
+        /// Функция генерация отклонения
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         float RandomFloat(float x)
         {
             var offset = _random.NextSingle() * 2 * x - x;
