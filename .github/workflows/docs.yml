@@ -1,12 +1,10 @@
 name: Documentation
 
 on:
-  workflow_dispatch: 
-  pull_request:    
-    branches:
-      - main
-      - develop
-      - backend
+  push:
+    branches: [ main, develop, backend ]
+  pull_request:
+    branches: [ main, develop, backend ]
 
 jobs:
   build-documentation:
