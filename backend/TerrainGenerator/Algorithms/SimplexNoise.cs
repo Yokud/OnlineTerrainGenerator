@@ -1,15 +1,38 @@
 ﻿namespace TerrainGenerator
 {
+    /// <summary>
+    /// Алгоритм генерации ландшафта на основе симплексного шума
+    /// </summary>
     public class SimplexNoise : ILandGenerator
     {
+        /// <summary>
+        /// Количество октав по умолчанию
+        /// </summary>
         public const int DefaultOctaves = 1;
-        public const float DefaultLacunarity = 2f, DefaultPersistense = 0.5f;
+
+        /// <summary>
+        /// Лакунарность по умолчанию
+        /// </summary>
+        public const float DefaultLacunarity = 2f;
+
+        /// <summary>
+        /// Устойчивость по умолчанию
+        /// </summary>
+        public const float DefaultPersistense = 0.5f;
 
         int _scale, _octaves, _seed;
         float _lacunarity, _persistence;
 
         readonly byte[] _seedNums;
 
+        /// <summary>
+        /// Инициализция симплексного шума
+        /// </summary>
+        /// <param name="scale">Масштаб</param>
+        /// <param name="octaves">Количество октав</param>
+        /// <param name="lacunarity">Лакунарность</param>
+        /// <param name="persistence">Устойчивость</param>
+        /// <param name="seed">Зерно генерации</param>
         public SimplexNoise(int scale, int octaves = DefaultOctaves, float lacunarity = DefaultLacunarity, float persistence = DefaultPersistense, int? seed = null)
         {
             Scale = scale;
@@ -24,24 +47,36 @@
             rd.NextBytes(_seedNums);
         }
 
+        /// <summary>
+        /// Масштаб
+        /// </summary>
         public int Scale
         {
             get => _scale;
             set => _scale = value > 0 ? value : throw new ArgumentException("Scale is positive value", nameof(Scale));
         }
 
+        /// <summary>
+        /// Количество октав
+        /// </summary>
         public int Octaves
         {
             get => _octaves;
             set => _octaves = value > 0 ? value : throw new ArgumentException("Octaves is positive value", nameof(Octaves));
         }
 
+        /// <summary>
+        /// Лакунарность
+        /// </summary>
         public float Lacunarity
         {
             get => _lacunarity;
             set => _lacunarity = value > 0 ? value : throw new ArgumentException("Lacunarity is positive value", nameof(Lacunarity));
         }
 
+        /// <summary>
+        /// Устойчивость
+        /// </summary>
         public float Persistence
         {
             get => _persistence;
@@ -87,6 +122,12 @@
             return map;
         }
 
+        /// <summary>
+        /// Шумовая функция
+        /// </summary>
+        /// <param name="x">Координата x</param>
+        /// <param name="y">Координата y</param>
+        /// <returns>Шумовое значение</returns>
         private float Generate(float x, float y)
         {
             const float F2 = 0.366025403f; // F2 = 0.5*(sqrt(3.0)-1.0)
@@ -158,20 +199,38 @@
 
             // Add contributions from each corner to get the final noise value.
             // The result is scaled to return values in the interval [-1,1].
-            return 40.0f * (n0 + n1 + n2); // TODO: The scale factor is preliminary!
+            return 40.0f * (n0 + n1 + n2);
         }
 
+        /// <summary>
+        /// Быстрое округление вниз
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         private static int FastFloor(float x)
         {
             return (x > 0) ? ((int)x) : (((int)x) - 1);
         }
 
+        /// <summary>
+        /// Математически верный остаток от деления
+        /// </summary>
+        /// <param name="x">Число</param>
+        /// <param name="m">Основение</param>
+        /// <returns>Остаток от деления (> 0)</returns>
         private static int Mod(int x, int m)
         {
             var a = x % m;
             return a < 0 ? a + m : a;
         }
 
+        /// <summary>
+        /// Получение модуля градиента по координатам
+        /// </summary>
+        /// <param name="hash">Хеш</param>
+        /// <param name="x">Координата x</param>
+        /// <param name="y">Координата y</param>
+        /// <returns>Модуль градиента</returns>
         private static float Grad(int hash, float x, float y)
         {
             var h = hash & 7;      // Convert low 3 bits of hash code
