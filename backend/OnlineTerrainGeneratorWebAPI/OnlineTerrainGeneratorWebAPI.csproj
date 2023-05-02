@@ -17,4 +17,7 @@
     <ProjectReference Include="..\TerrainGenerator\TerrainGenerator.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 </Project>

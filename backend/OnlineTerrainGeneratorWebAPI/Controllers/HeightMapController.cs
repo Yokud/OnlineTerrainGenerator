@@ -46,7 +46,7 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         /// </summary>
         /// <returns>URL сгенерированной карты высот</returns>
         /// <response code="200">URL сгенерированной карты высот</response>
-        /// <response code="204">Параметры карты высот не заданы</response>
+        /// <response code="204">Карта высот ещё не была сгенерирована</response>
         [HttpGet("grayscaled")]
         public IActionResult GetHeightMap()
         {
