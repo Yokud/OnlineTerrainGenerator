@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineTerrainGeneratorWebAPI.Logic;
 
+
 namespace OnlineTerrainGeneratorWebAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -16,6 +17,13 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
             _urlCreator= new UrlCreator(webHostEnvironment);
         }
 
+        /// <summary>
+        /// Получает разукрашенную карту высот на основе указанных параметров
+        /// </summary>
+        /// <param name="heightMapParams">Параметры карты высот</param>
+        /// <returns>URL сгенерированной карты высот</returns>
+        /// <response code="200">URL сгенерированной карты высот</response>
+        /// <response code="400">Не удалось получить карту высот</response> 
         [HttpGet("colored")]
         public IActionResult GetColoredHeightMap([FromQuery] string heightMapParams)
         {
@@ -33,6 +41,12 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Получает карту высот в оттенках серого
+        /// </summary>
+        /// <returns>URL сгенерированной карты высот</returns>
+        /// <response code="200">URL сгенерированной карты высот</response>
+        /// <response code="204">Карта высот ещё не была сгенерирована</response>
         [HttpGet("grayscaled")]
         public IActionResult GetHeightMap()
         {
@@ -40,6 +54,14 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
 
             return (img is null) ? NoContent() : Ok(_urlCreator.CreateImageUrl(Request, img, "grayscaled.png"));
         }
+
+        /// <summary>
+        /// Обновляет карту высот на основе указанных параметров
+        /// </summary>
+        /// <param name="heightMapParams">Параметры для обновления карты высот</param>
+        /// <returns>URL обновленной карты высот</returns>
+        /// <response code="200">URL обновленной карты высот</response>
+        /// <response code="400">Не удалось обновить карту высот</response> 
 
         [HttpPut]
         public IActionResult UpdateHeightMap([FromQuery] string heightMapParams)
