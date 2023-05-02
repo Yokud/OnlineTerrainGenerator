@@ -21,6 +21,7 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
         {
             _hostingEnvironment = hostingEnvironment;
         }
+
         /// <summary>
         /// Создает URL изображения
         /// </summary>

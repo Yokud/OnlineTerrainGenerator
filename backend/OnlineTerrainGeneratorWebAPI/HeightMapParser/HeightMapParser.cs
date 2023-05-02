@@ -31,10 +31,10 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
             /// </summary>
             Unknown
         }
+
         /// <summary>
         /// Разобранные параметры карты высот, полученные из входной строки JSON
         /// </summary>
-
         public struct HeigthMapParams
         {
             /// <summary>
@@ -76,6 +76,7 @@ namespace OnlineTerrainGeneratorWebAPI.HeightMapParser
 
             return parameters;
         }
+
         /// <summary>
         /// Разбирает математическое выражение в функцию
         /// </summary>

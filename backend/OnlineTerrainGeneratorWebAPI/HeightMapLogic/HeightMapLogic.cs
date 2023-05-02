@@ -69,7 +69,7 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
         }
 
         /// <summary>
-        // Возвращает карту высот в оттенках серого
+        /// Возвращает карту высот в оттенках серого
         /// </summary>
         /// <returns>Карта высот в оттенках серого</returns>
         public Image<Rgba32>? GetHeightMap()
@@ -78,7 +78,7 @@ namespace OnlineTerrainGeneratorWebAPI.Logic
         }
 
         /// <summary>
-        // Возвращает разукрашенную карту высот
+        /// Возвращает разукрашенную карту высот
         /// </summary>
         /// <returns>Разукрашенная карта высот</returns>
         public Image<Rgba32>? GetColoredHeightMap()

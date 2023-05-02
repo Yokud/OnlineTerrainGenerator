@@ -55,7 +55,6 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
             return (img is null) ? NoContent() : Ok(_urlCreator.CreateImageUrl(Request, img, "grayscaled.png"));
         }
 
-
         /// <summary>
         /// Обновляет карту высот на основе указанных параметров
         /// </summary>
