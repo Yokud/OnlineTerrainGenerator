@@ -2,7 +2,7 @@ class Ajax {
     constructor() {
         this.backendHostname = '127.0.0.1';
         this.backendPort = '7252';
-        this._backendUrl = 'http://' + this.backendHostname + ':' + this.backendPort;
+        this._backendUrl = 'https://' + this.backendHostname + ':' + this.backendPort;
 
         this._apiUrl = {
             send: '/api/HeightMap/colored',
@@ -21,8 +21,9 @@ class Ajax {
 
         return fetch(requestUrl, {
             method: requestType,
-            mode: "cors",
-            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
             body,
         });
     }
