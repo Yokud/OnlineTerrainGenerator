@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OnlineTerrainGenerator API",
+    "description": "Online terrain generator Web API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/HeightMap/colored": {
+      "get": {
+        "tags": [
+          "HeightMap"
+        ],
+        "summary": "Получает разукрашенную карту высот на основе указанных параметров",
+        "parameters": [
+          {
+            "name": "heightMapParams",
+            "in": "query",
+            "description": "Параметры карты высот",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "URL сгенерированной карты высот"
+          },
+          "400": {
+            "description": "Не удалось получить карту высот"
+          }
+        }
+      }
+    },
+    "/api/HeightMap/grayscaled": {
+      "get": {
+        "tags": [
+          "HeightMap"
+        ],
+        "summary": "Получает карту высот в оттенках серого",
+        "responses": {
+          "200": {
+            "description": "URL сгенерированной карты высот"
+          },
+          "204": {
+            "description": "Карта высот ещё не была сгенерирована"
+          }
+        }
+      }
+    },
+    "/api/HeightMap": {
+      "put": {
+        "tags": [
+          "HeightMap"
+        ],
+        "summary": "Обновляет карту высот на основе указанных параметров",
+        "parameters": [
+          {
+            "name": "heightMapParams",
+            "in": "query",
+            "description": "Параметры для обновления карты высот",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "URL обновленной карты высот"
+          },
+          "400": {
+            "description": "Не удалось обновить карту высот"
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}
