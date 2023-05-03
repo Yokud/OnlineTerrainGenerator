@@ -1,6 +1,6 @@
 class Ajax {
     constructor() {
-        this.backendHostname = '127.0.0.1';
+        this.backendHostname = 'localhost';
         this.backendPort = '7252';
         this._backendUrl = 'https://' + this.backendHostname + ':' + this.backendPort;
 
