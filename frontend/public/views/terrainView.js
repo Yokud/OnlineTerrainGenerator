@@ -52,10 +52,19 @@ export default class TerrainView {
                 });
 
                 if (flagCorrect) {
-                    actionTerrain.getTerrain('test');
+                    let options = [];
+                    optionsConst.inputOptionsField.forEach((field) => {
+                        const fieldElem = window.document.getElementById(field.jsIdInput);
+                        options.push(fieldElem.value);
+                    });
+
+                    if (!terrainStore.flag) {
+                        actionTerrain.send(this._func.value, this._algoritm.value, options);
+                    } else {
+                        actionTerrain.update(this._func.value, this._algoritm.value, options);
+                    }
                 }
             }
-
         });
 
         this._func.addEventListener('change', () => {

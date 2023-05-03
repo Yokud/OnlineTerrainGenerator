@@ -111,3 +111,11 @@
 .table__pic {
     margin: auto;
 }
+
+.install-btn {
+    grid-row: 3;
+    grid-column: 3;
+
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
