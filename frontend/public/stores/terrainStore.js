@@ -1,6 +1,7 @@
 import Dispatcher from '../dispatcher/dispatcher.js';
 import Ajax from "../modules/ajax.js";
 import {optionsConst} from "../static/htmlConst.js";
+import TerrainView from "../views/terrainView.js"
 
 class terrainStore {
     constructor() {
@@ -29,10 +30,10 @@ class terrainStore {
                 await this._send(action.func, action.alg, action.options);
                 break;
             case 'download':
-                await this._download(action.data);
+                await this._download();
                 break;
             case 'update':
-                await this._update(action.data);
+                await this._update(action.func, action.alg, action.options);
                 break;
             default:
                 return;
@@ -40,20 +41,25 @@ class terrainStore {
     }
 
     async _send(func, alg, options) {
+        alert(1)
         const request = await Ajax.send(func, alg, options);
 
         if (request.status === 200) {
             const response = await request.json();
-            console.log(response);
-            optionsConst.result = 'static/img/testImg.svg';
+
+            //optionsConst.result = 'static/img/testImg.svg';
+            optionsConst.result = response;
+            TerrainView._flag = true;
         } else {
-            alert('send error');
+            TerrainView._flag = true;
+            optionsConst.result = false;
         }
+        alert(TerrainView._flag)
         this._refreshStore();
     }
 
-    async _download(data) {
-        const request = await Ajax.download(data);
+    async _download() {
+        const request = await Ajax.download();
 
         if (request.status === 200) {
             const response = await request.json();
@@ -64,14 +70,15 @@ class terrainStore {
         this._refreshStore();
     }
 
-    async _update(data) {
-        const request = await Ajax.update(data);
+    async _update(func, alg, options) {
+        alert(2)
+        const request = await Ajax.update(func, alg, options);
 
         if (request.status === 200) {
             const response = await request.json();
-            console.log(response);
+            optionsConst.result = response;
         } else {
-            alert('update error');
+            optionsConst.result = false;
         }
         this._refreshStore();
     }
