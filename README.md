@@ -1,4 +1,8 @@
 # OnlineTerrainGenerator
-Command development project
+Проект по командной разработке: Онлайн-генератор ландшафта
 
-[Генератор ландшафта](https://Yokud.github.io/OnlineTerrainGenerator/annotated.html)
+Для более подробной информации читайте вики проекта
+
+[Документация генератора ландшафта](https://Yokud.github.io/OnlineTerrainGenerator/annotated.html)
+
+<a href="https://www.figma.com/file/PlR5ubseEq8RxMJtWzmuMg/Untitled?node-id=0%3A1&t=ngMiPbmRtDgvis1e-1" target="_blank">Frontend figma</a>
