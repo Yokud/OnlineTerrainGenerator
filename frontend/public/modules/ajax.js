@@ -1,18 +1,18 @@
 class Ajax {
     constructor() {
         this.backendHostname = '127.0.0.1';
-        this.backendPort = '8080';
+        this.backendPort = '7252';
         this._backendUrl = 'http://' + this.backendHostname + ':' + this.backendPort;
 
         this._apiUrl = {
-            sendParam: '',
+            send: '/api/HeightMap/colored',
+            download: '/api/HeightMap/grayscaled',
+            update: '/api/HeightMap',
         }
 
         this._requestType = {
             GET: 'GET',
-            POST: 'POST',
-            DELETE: 'DELETE',
-            PATCH: 'PATCH',
+            PUT: 'PUT',
         }
     }
 
@@ -27,8 +27,18 @@ class Ajax {
         });
     }
 
-    async getTerrain(data) {
-        return {status: 200, text: 'test'};
+    async send(func, alg, options) {
+        let body = {func: func, alg: alg, options: options};
+        return this._request(this._apiUrl.send + '?heightMapParams=' + JSON.stringify(body), this._requestType.GET);
+    }
+
+    async download() {
+        return this._request(this._apiUrl.download, this._requestType.GET);
+    }
+
+    async update(func, alg, options) {
+        let body = {func: func, alg: alg, options: options};
+        return this._request(this._apiUrl.update + '?heightMapParams=' + JSON.stringify(body), this._requestType.PUT);
     }
 }
 

@@ -25,21 +25,53 @@ class terrainStore {
 
     async _fromDispatch(action) {
         switch (action.actionName) {
-            case 'getTerrain':
-                await this._getTerrain(action.data);
+            case 'send':
+                await this._send(action.func, action.alg, action.options);
+                break;
+            case 'download':
+                await this._download(action.data);
+                break;
+            case 'update':
+                await this._update(action.data);
                 break;
             default:
                 return;
         }
     }
 
-    async _getTerrain(data) {
-        const request = await Ajax.getTerrain(data);
+    async _send(func, alg, options) {
+        const request = await Ajax.send(func, alg, options);
 
         if (request.status === 200) {
+            const response = await request.json();
+            console.log(response);
             optionsConst.result = 'static/img/testImg.svg';
         } else {
-            alert('error');
+            alert('send error');
+        }
+        this._refreshStore();
+    }
+
+    async _download(data) {
+        const request = await Ajax.download(data);
+
+        if (request.status === 200) {
+            const response = await request.json();
+            console.log(response);
+        } else {
+            alert('download error');
+        }
+        this._refreshStore();
+    }
+
+    async _update(data) {
+        const request = await Ajax.update(data);
+
+        if (request.status === 200) {
+            const response = await request.json();
+            console.log(response);
+        } else {
+            alert('update error');
         }
         this._refreshStore();
     }

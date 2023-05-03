@@ -52,7 +52,12 @@ export default class TerrainView {
                 });
 
                 if (flagCorrect) {
-                    actionTerrain.getTerrain('test');
+                    let options = [];
+                    optionsConst.inputOptionsField.forEach((field) => {
+                        const fieldElem = window.document.getElementById(field.jsIdInput);
+                        options.push(fieldElem.value);
+                    });
+                    actionTerrain.send(this._func.value, this._algoritm.value, options);
                 }
             }
 
