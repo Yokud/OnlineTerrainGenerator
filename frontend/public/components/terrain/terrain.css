@@ -1,0 +1,121 @@
+.terrain {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+.options {
+    grid-column: 1;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 21% 1fr 21%;
+    grid-template-rows: 21.2% 1fr 26.9%;
+}
+.logo {
+    grid-column: 1/4;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10%;
+}
+.input-table {
+    grid-row: 2;
+    grid-column: 2;
+
+    display: grid;
+    grid-template-rows: 50px 50px 50px 50px 50px 50px 50px 50px;
+    grid-row-gap: 16px;
+}
+.input-table__title {
+    display: inline-grid;
+    align-items: center;
+    text-align: center;
+
+    grid-row: 1;
+}
+.input-table__error-info {
+    display: inline-grid;
+    align-items: center;
+    text-align: center;
+}
+.input-table__link {
+    display: inline-grid;
+    align-items: center;
+    text-align: center;
+}
+.input-table__link-info {
+    display: inline-grid;
+    align-items: center;
+    text-align: center;
+}
+
+.menu {
+    display: grid;
+    grid-template: 70% 2% 28%/ 100%;
+}
+.menu__field {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    outline: none;
+
+    grid-row: 1;
+    grid-column: 1;
+}
+.menu__field-correct {
+    border: none;
+    background: var(--background-color-input, #E9E9E9);
+}
+.menu__field-incorrect {
+    border: 1px solid var(--font-color-error, #D5534D);
+    background: var(--background-color-error, #FFEBEB);
+}
+.menu__error {
+    grid-row: 3;
+    grid-column: 1;
+
+    font-weight: 400;
+}
+
+.menu__field:focus {
+    outline: 1px solid var(--font-color-gray-text, #6C6F72);
+}
+.menu__field::placeholder {
+    font-family: InterMedium, sans-serif;
+    color: var(--font-color-gray-text, #6C6F72);
+    font-size: var(--font-size-15, 15px);
+}
+
+
+
+
+
+.menu-item {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    outline: none;
+}
+
+.result {
+    grid-column: 2;
+}
+.table {
+    display: grid;
+    margin: auto;
+    width: 60%;
+    height: 20%;
+}
+.table__block {
+    margin: auto;
+}
+.table__pic {
+    margin: auto;
+}
+
+.install-btn {
+    grid-row: 3;
+    grid-column: 3;
+
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
