@@ -28,6 +28,13 @@ class Ajax {
     }
 
     async send(func, alg, options) {
+        if (alg === "1") {
+            alg = 'DiamondSquare';
+        } else if (alg === "2") {
+            alg = 'PerlinNoise';
+        } else  if (alg === "3") {
+            alg = 'SimplexNoise';
+        }
         let body = {func: func, alg: alg, options: options};
         return this._request(this._apiUrl.send + '?heightMapParams=' + JSON.stringify(body), this._requestType.GET);
     }
@@ -37,6 +44,13 @@ class Ajax {
     }
 
     async update(func, alg, options) {
+        if (alg === "1") {
+            alg = 'DiamondSquare';
+        } else if (alg === "2") {
+            alg = 'PerlinNoise';
+        } else  if (alg === "3") {
+            alg = 'SimplexNoise';
+        }
         let body = {func: func, alg: alg, options: options};
         return this._request(this._apiUrl.update + '?heightMapParams=' + JSON.stringify(body), this._requestType.PUT);
     }

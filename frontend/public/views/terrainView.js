@@ -6,8 +6,6 @@ export default class TerrainView {
     constructor() {
         this._addHandlebarsPartial();
 
-        this._flag = false;
-
         this._rootElement = document.getElementById('root');
 
         terrainStore.registerCallback(this.updatePage.bind(this))
@@ -59,7 +57,8 @@ export default class TerrainView {
                         const fieldElem = window.document.getElementById(field.jsIdInput);
                         options.push(fieldElem.value);
                     });
-                    if (!this._flag) {
+
+                    if (!terrainStore.flag) {
                         actionTerrain.send(this._func.value, this._algoritm.value, options);
                     } else {
                         actionTerrain.update(this._func.value, this._algoritm.value, options);

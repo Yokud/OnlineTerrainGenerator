@@ -8,6 +8,7 @@ class terrainStore {
         this._callbacks = [];
 
         this.result = null;
+        this.flag = false;
 
         Dispatcher.register(this._fromDispatch.bind(this));
     }
@@ -41,7 +42,6 @@ class terrainStore {
     }
 
     async _send(func, alg, options) {
-        alert(1)
         const request = await Ajax.send(func, alg, options);
 
         if (request.status === 200) {
@@ -49,12 +49,11 @@ class terrainStore {
 
             //optionsConst.result = 'static/img/testImg.svg';
             optionsConst.result = response;
-            TerrainView._flag = true;
+            this.flag = true;
         } else {
-            TerrainView._flag = true;
             optionsConst.result = false;
         }
-        alert(TerrainView._flag)
+
         this._refreshStore();
     }
 
