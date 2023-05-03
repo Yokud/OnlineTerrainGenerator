@@ -25,7 +25,7 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         /// <response code="200">URL сгенерированной карты высот</response>
         /// <response code="400">Не удалось получить карту высот</response> 
         [HttpGet("colored")]
-        public IActionResult GetColoredHeightMap([FromQuery] string heightMapParams)
+        public ActionResult<string> GetColoredHeightMap([FromQuery] string heightMapParams)
         {
             try
             {
@@ -33,7 +33,11 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
 
                 var img = _heightMapLogic.GetColoredHeightMap();
 
-                return (img is null) ? BadRequest("Coudn't upload image.") : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
+                if (img is null)
+                    return BadRequest("Coudn't upload image.");
+
+                var url = _urlCreator.CreateImageUrl(Request, img, "colored.png");
+                return Ok(new { data = url });
             }
             catch (ArgumentException ex)
             {
@@ -48,11 +52,11 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         /// <response code="200">URL сгенерированной карты высот</response>
         /// <response code="204">Карта высот ещё не была сгенерирована</response>
         [HttpGet("grayscaled")]
-        public IActionResult GetHeightMap()
+        public ActionResult<string> GetHeightMap()
         {
             var img = _heightMapLogic.GetHeightMap();
 
-            return (img is null) ? NoContent() : Ok(_urlCreator.CreateImageUrl(Request, img, "grayscaled.png"));
+            return (img is null) ? NoContent() : Ok(new { data = _urlCreator.CreateImageUrl(Request, img, "grayscaled.png") });
         }
 
         /// <summary>
@@ -64,7 +68,7 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
         /// <response code="400">Не удалось обновить карту высот</response> 
 
         [HttpPut]
-        public IActionResult UpdateHeightMap([FromQuery] string heightMapParams)
+        public ActionResult<string> UpdateHeightMap([FromQuery] string heightMapParams)
         {
             try
             {
@@ -72,7 +76,11 @@ namespace OnlineTerrainGeneratorWebAPI.Controllers
 
                 var img = _heightMapLogic.GetColoredHeightMap();
 
-                return (img is null) ? BadRequest("Coudn't upload image.") : Ok(_urlCreator.CreateImageUrl(Request, img, "colored.png"));
+                if (img is null)
+                    return BadRequest("Coudn't upload image.");
+
+                var url = _urlCreator.CreateImageUrl(Request, img, "colored.png");
+                return Ok(new { data = url });
             }
             catch (ArgumentException ex)
             {
