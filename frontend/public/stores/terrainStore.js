@@ -46,9 +46,8 @@ class terrainStore {
 
         if (request.status === 200) {
             const response = await request.json();
-
-            //optionsConst.result = 'static/img/testImg.svg';
-            optionsConst.result = response;
+            
+            optionsConst.result = response.data;
             this.flag = true;
         } else {
             optionsConst.result = false;
@@ -62,7 +61,6 @@ class terrainStore {
 
         if (request.status === 200) {
             const response = await request.json();
-            console.log(response);
         } else {
             alert('download error');
         }
@@ -70,12 +68,11 @@ class terrainStore {
     }
 
     async _update(func, alg, options) {
-        alert(2)
         const request = await Ajax.update(func, alg, options);
 
         if (request.status === 200) {
             const response = await request.json();
-            optionsConst.result = response;
+            optionsConst.result = response.data;
         } else {
             optionsConst.result = false;
         }

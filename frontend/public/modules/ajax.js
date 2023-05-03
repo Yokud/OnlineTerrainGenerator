@@ -21,10 +21,7 @@ class Ajax {
 
         return fetch(requestUrl, {
             method: requestType,
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-                'Accept': 'application/json',
-            },
+            mode: "cors",
             body,
         });
     }
