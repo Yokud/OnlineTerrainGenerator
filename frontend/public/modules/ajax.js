@@ -23,13 +23,12 @@ class Ajax {
             method: requestType,
             mode: "cors",
             credentials: "include",
-            headers: a,
             body,
         });
     }
 
     async getTerrain(data) {
-        return {text: 'test'};
+        return {status: 200, text: 'test'};
     }
 }
 
