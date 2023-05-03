@@ -1,7 +1,7 @@
 # OnlineTerrainGenerator
 Проект по командной разработке: Онлайн-генератор ландшафта
 
-Для более подробной информации читайте вики проекта
+Для более подробной информации читайте [вики проекта](https://github.com/Yokud/OnlineTerrainGenerator/wiki)
 
 [Документация генератора ландшафта](https://Yokud.github.io/OnlineTerrainGenerator/annotated.html)
 
