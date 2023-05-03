@@ -1,0 +1,43 @@
+<div class="terrain" id="terrain">
+    <div class="options">
+        <div class="logo">
+            <img class="logo__pic" src={{ logo }}>
+            <span class="logo__text font-Limelight font-size-28 font-color-logo-color"> {{ logoText }} </span>
+        </div>
+        <div class="input-table">
+            <span class="input-table__title font-Comfortaa font-size-23 font-color-title"> {{ title }} </span>
+            {{> inputField inputFields.func}}
+
+            <div class="menu">
+                <select class="menu__field menu__field-correct font-InterMedium font-color-gray-text font-size-15 border-radius-btn-input text-indent-input" id={{ inputFields.alg.jsIdInput }}>
+                    <option value="0"> {{ inputFields.alg.help }}</option>
+                    <option value="1"> {{ algFields.first }} </option>
+                    <option value="2"> {{ algFields.second }} </option>
+                    <option value="3"> {{ algFields.third }} </option>
+                </select>
+                <div class="menu__error font-InterRegular font-size-12 font-color-error" id={{ inputFields.alg.jsIdError }}></div>
+            </div>
+
+            {{#each inputOptionsField}}
+                {{> inputField this}}
+            {{/each}}
+
+            {{> button buttonInfo}}
+
+            <span class="input-table__link-info font-InterMedium font-size-15 font-color-reg-info"> {{ info }} </span>
+        </div>
+        <!--<div class="install-btn">
+            <img src="static/img/install.svg"> install
+        </div>-->
+    </div>
+    {{#if result}}
+        <img class="result border-radius-result margin-auto" src={{ result }}>
+    {{else}}
+        <div class="result table box-shadow-no-img border-radius-result">
+            <div class="table__block">
+                <img class="table__pic" src={{ smile }}>
+                <span class="table__text font-MailSansRoman font-size-19 font-color-gray-text"> {{ noImgText }} </span>
+            </div>
+        </div>
+    {{/if}}
+</div>

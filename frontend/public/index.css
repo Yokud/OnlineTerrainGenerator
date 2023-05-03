@@ -1,0 +1,171 @@
+@import "components/terrain/terrain.css";
+@import "components/button/button.css";
+@import "components/inputField/inputField.css";
+
+@font-face {
+    font-family: Limelight; /* Имя шрифта */
+    src: url(static/fonts/Limelight-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: InterMedium; /* Имя шрифта */
+    src: url(static/fonts/Inter-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: InterRegular; /* Имя шрифта */
+    src: url(static/fonts/Inter-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: MailSansRoman; /* Имя шрифта */
+    src: url(static/fonts/MailSansRoman-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Comfortaa; /* Имя шрифта */
+    src: url(static/fonts/Comfortaa-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: Montserrat; /* Имя шрифта */
+    src: url(static/fonts/Montserrat-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+
+
+:root {
+    --font-size-10: 10px;
+    --font-size-12: 12px;
+    --font-size-13: 13px;
+    --font-size-15: 15px;
+    --font-size-16: 16px;
+    --font-size-19: 19px;
+    --font-size-23: 23px;
+    --font-size-28: 28px;
+
+    --font-color-select-dark: #D9D9D9;
+    --font-color-gray-text: #6C6F72;
+    --font-color-error: #D5534D;
+    --font-color-btn: #FFFFFF;
+    --font-color-info: #8D949D;
+    --font-color-logo-color: #648A52;
+
+    --background-color-main: #FAFAFA;
+    --background-color-input: #E9E9E9;
+    --background-color-error: #FFEBEB;
+    /*--background-color-btn: linear-gradient(270deg, #C72FCB -0.18%, #803BB6 37.83%, #510AC2 70.47%, #510AC2 98.59%);*/
+    --background-color-btn: linear-gradient(270deg, #5A8F59 -0.18%, #3435A2 98.59%);
+
+    --border-radius-btn: 8px;
+    --border-radius-result: 30px;
+
+    --btn-input-height: 52px;
+
+    --text-indent-input: 5px;
+
+    --box-shadow-no-img: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
+}
+
+.font-Limelight {
+    font-family: Limelight, sans-serif;
+}
+.font-InterMedium {
+    font-family: InterMedium, sans-serif;
+}
+.font-InterRegular {
+    font-family: InterRegular, sans-serif;
+}
+.font-MailSansRoman {
+    font-family: MailSansRoman, sans-serif;
+}
+.font-Comfortaa {
+    font-family: Comfortaa, sans-serif;
+}
+.font-Montserrat {
+    font-family: Montserrat, sans-serif;
+}
+
+.font-size-10 {
+    font-size: var(--font-size-10, 10px);
+}
+.font-size-12 {
+    font-size: var(--font-size-12, 12px);
+}
+.font-size-13 {
+    font-size: var(--font-size-13, 13px);
+}
+.font-size-15 {
+    font-size: var(--font-size-15, 15px);
+}
+.font-size-16 {
+    font-size: var(--font-size-16, 16px);
+}
+.font-size-19 {
+    font-size: var(--font-size-19, 19px);
+}
+.font-size-23 {
+    font-size: var(--font-size-23, 23px);
+}
+.font-size-28 {
+    font-size: var(--font-size-28, 28px);
+}
+
+.font-color-select-dark {
+    color: var(--font-color-select-dark, #D9D9D9);
+}
+.font-color-gray-text {
+    color: var(--font-color-gray-text, #6C6F72);
+}
+.font-color-error {
+    color: var(--font-color-error, #D5534D);
+}
+.font-color-btn {
+    color: var(--font-color-btn, #FFFFFF);
+}
+.font-color-reg-info {
+    color: var(--font-color-info, #8D949D);
+}
+.font-color-logo-color {
+    color: var(--font-color-logo-color, #648A52);
+}
+
+.background-color-main {
+    background: var(--background-color-main, #FAFAFA);
+}
+.background-color-input {
+    background: var(--background-color-input, #E9E9E9);
+}
+.background-color-error {
+    background: var(--background-color-error, #FFEBEB);
+}
+.background-color-btn {
+    background: var(--background-color-btn, linear-gradient(270deg, #5A8F59 -0.18%, #3435A2 98.59%));
+}
+
+.box-shadow-no-img {
+    box-shadow: var(--box-shadow-no-img, 0px 0px 12px 2px rgba(0, 0, 0, 0.3));
+}
+
+.border-radius-btn-input {
+    border-radius: var(--border-radius-btn, 8px);
+}
+.border-radius-result {
+    border-radius: var(--border-radius-result, 30px);
+}
+.border-none {
+    border: none;
+}
+.margin-auto {
+    margin: auto;
+}
+.text-indent-input {
+    text-indent: var(--text-indent-input, 5px);
+}
+.display-none {
+    display: none;
+}
+
+body, html, #root {
+    margin: 0;
+    min-height: 100vh;
+}
